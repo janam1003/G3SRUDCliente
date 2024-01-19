@@ -6,10 +6,15 @@
 package view.customer;
 
 import entities.Customer;
+import exception.ReadException;
+import factories.CustomerManagerFactory;
+import interfaces.CustomerManager;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,7 +39,8 @@ import view.generic.GenericController;
  * @author danid
  */
 public class CustomerListController extends GenericController {
-
+    private ObservableList<Customer> customers;
+    
     @FXML
     private Menu menuCustomers;
     @FXML
@@ -59,6 +65,18 @@ public class CustomerListController extends GenericController {
     private Button btnPrintDocument;
     @FXML
     private ComboBox<String> cbSearchFilters;
+    @FXML
+    private TableColumn<Customer, String> tcName;
+    @FXML
+    private TableColumn<Customer, String> tcMail;
+    @FXML
+    private TableColumn<Customer, String> tcPhone;
+    @FXML
+    private TableColumn<Customer, String> tcAddress;
+    @FXML
+    private TableColumn<Customer, String> tcZip;
+    @FXML
+    private TableColumn<Customer, String> tcCreationDate;
 
     /**
      * Initializes the controller class.
@@ -67,37 +85,53 @@ public class CustomerListController extends GenericController {
 
     public void initStage(Parent root) {
         
-        Stage stage = new Stage();
-        stage.setTitle("Customer List");
-        stage.setResizable(false);
-        
-       
-        
-        cbSearchFilters.setItems(FXCollections.observableArrayList("Every Customer", "Customer with trips", "Customers with one week trips"));
-        cbSearchFilters.setValue("Every Customer");
+        try {
+            CustomerManager mang = CustomerManagerFactory.getCustomerManager();
+            
+            Scene scene = new Scene(root);
+            
+            stage.setTitle("Customer List");
+            stage.setResizable(false);
+            
+            this.btnNewCustomer.setDefaultButton(true);
+            this.btnDelete.setDisable(true);
+            this.btnShowTrips.setDisable(true);
+            this.btnSearch.setDisable(true);
+            
+            
+            
+            
+            cbSearchFilters.setItems(FXCollections.observableArrayList("Every Customer", "Customer with trips", "Customers with one week trips"));
+            cbSearchFilters.setValue("Every Customer");
+            
+            // TableView para mostrar los clientes
+            tvCustomers.setEditable(true);
+ 
+            tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        // TableView para mostrar los clientes
-        tvCustomers = new TableView<>();
-        tvCustomers.setEditable(true);
-        
-        // TODO: Cargar datos en la tabla usando getAllCustomers()
-        ObservableList<Customer> customers = FXCollections.observableArrayList();
-        // Llena customers con datos obtenidos de getAllCustomers()
-        tvCustomers.setItems(customers);
+            tcMail.setCellValueFactory(new PropertyValueFactory<>("mail"));
 
+            tcPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
-        // Botones
-        btnSearch = new Button("Search");
-        btnDelete = new Button("Delete");
-        btnShowTrips = new Button("Show Trips");
-        btnNewCustomer = new Button("New Customer");
-        btnNewCustomer.setDefaultButton(true);
+            tcAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
 
+            tcZip.setCellValueFactory(new PropertyValueFactory<>("zip"));
 
-        
-        stage.setOnCloseRequest(this::handleOnActionExit);
-
-        stage.setScene(new Scene(root));
-        stage.show();
+            tcCreationDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+            
+            // TODO: Cargar datos en la tabla usando getAllCustomers()
+            customers = FXCollections.observableArrayList(mang.findAllCustomers());
+            // Llena customers con datos obtenidos de getAllCustomers()
+            tvCustomers.setItems(customers);
+            
+            
+            
+            stage.setOnCloseRequest(this::handleOnActionExit);
+            
+            stage.setScene(scene);
+            stage.show();
+        } catch (ReadException ex) {
+            LOGGER.severe(ex.getMessage());
+        }
     }
 }

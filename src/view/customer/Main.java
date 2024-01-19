@@ -5,30 +5,23 @@ import javafx.stage.Stage;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        try {
+    public void start(Stage stage) throws Exception {
             // Carga el archivo FXML del controlador
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerList.fxml"));
 
             
             // Crea la escena a partir del archivo FXML
-            Parent root = loader.load();
+            Parent root = (Parent)loader.load();
             
             // Obtiene el controlador y llama a su método initStage
             CustomerListController controller = loader.getController();
-            controller.initStage(root);
             
-            // Configura y muestra la escena en el escenario
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+            controller.setStage(stage);
+            controller.initStage(root);
     }
 
     public static void main(String[] args) {

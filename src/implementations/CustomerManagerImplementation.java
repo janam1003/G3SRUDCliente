@@ -5,7 +5,6 @@
  */
 package implementations;
 
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import entities.Customer;
 import exception.CreateException;
 import exception.DeleteException;
@@ -14,6 +13,7 @@ import exception.UpdateException;
 import interfaces.CustomerManager;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.GenericType;
 import restful.CustomerRESTClient;
 
@@ -22,6 +22,10 @@ import restful.CustomerRESTClient;
  * @author danid
  */
 public class CustomerManagerImplementation implements CustomerManager {
+    /**
+	 * Logger object used to log messages for application.
+	 */
+	protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
 
     private CustomerRESTClient client = new CustomerRESTClient();
 

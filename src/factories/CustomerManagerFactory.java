@@ -5,10 +5,19 @@
  */
 package factories;
 
+import implementations.CustomerManagerImplementation;
+import interfaces.CustomerManager;
+
 /**
  *
  * @author danid
  */
 public class CustomerManagerFactory {
+    
+    public static CustomerManager getCustomerManager(){
+        
+        return new CustomerManagerImplementation();
+    
+    }
     
 }
