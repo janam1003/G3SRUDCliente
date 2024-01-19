@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.customer.CustomerListController">
+   <children>
+      <MenuBar prefHeight="81.0" prefWidth="1366.0">
+        <menus>
+          <Menu fx:id="menuCustomers" mnemonicParsing="false" text="Customers">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Customers" />
+               </items>
+          </Menu>
+          <Menu fx:id="menuTrips" mnemonicParsing="false" text="Trips">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Trips" />
+               </items>
+          </Menu>
+          <Menu fx:id="menuExit" mnemonicParsing="false" text="Exit">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Exit" />
+               </items></Menu>
+            <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Help" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <Pane prefHeight="768.0" prefWidth="1366.0">
+         <children>
+            
+            <ComboBox fx:id="cbSearchFilters" layoutX="42.0" layoutY="212.0" prefHeight="36.0" prefWidth="300.0" />
+            <TextField fx:id="tfMail" layoutX="417.0" layoutY="212.0" prefHeight="36.0" prefWidth="179.0" />
+            <Button fx:id="btnSearch" layoutX="676.0" layoutY="212.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0" text="Search" />
+            <Button fx:id="btnNewCustomer" layoutX="47.0" layoutY="273.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="116.0" text="New Customer" />
+            <Button fx:id="btnShowTrips" layoutX="190.0" layoutY="273.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="116.0" text="Show Trips" />
+            <TableView fx:id="tvCustomers" layoutX="47.0" layoutY="329.0" prefHeight="328.0" prefWidth="1098.0">
+               <columns>
+                  <TableColumn prefWidth="93.0" text="Name" />
+                  <TableColumn prefWidth="207.0" text="Mail" />
+                  <TableColumn prefWidth="159.0" text="Phone" />
+                  <TableColumn prefWidth="316.0" text="Address" />
+                  <TableColumn prefWidth="115.0" text="Zip" />
+                  <TableColumn prefWidth="207.0" text="Creation Date" />
+               </columns>
+               <contextMenu>
+                  <ContextMenu>
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Add" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Print" />
+                        <MenuItem mnemonicParsing="false" text="Help" />
+                    </items>
+                  </ContextMenu>
+               </contextMenu>
+            </TableView>
+            <Button fx:id="btnDelete" layoutX="1170.0" layoutY="483.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="116.0" text="Delete" />
+            <Button fx:id="btnPrintDocument" layoutX="47.0" layoutY="675.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="134.0" text="Print Document" />    
+            <Text layoutX="417.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer mail" wrappingWidth="167.13671875" />
+            <Text layoutX="47.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Filters" wrappingWidth="102.826171875" />
+            <Text layoutX="59.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer List">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</VBox>
