@@ -5,6 +5,7 @@
  */
 package restful;
 
+import entities.Customer;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -69,11 +70,11 @@ public class CustomerRESTClient {
     }
 
     public void createCustomer_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), Customer.class);
     }
 
     public void createCustomer_JSON(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), Customer.class);
     }
 
     public <T> T getCustomersOneWeekTrips_XML(GenericType<T> responseType) throws ClientErrorException {
@@ -89,15 +90,15 @@ public class CustomerRESTClient {
     }
 
     public void updateCustomer_XML(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), Customer.class);
     }
 
     public void updateCustomer_JSON(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), Customer.class);
     }
 
     public void deleteCustomer(String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("Delete/{0}", new Object[]{id})).request().delete();
+        webTarget.path(java.text.MessageFormat.format("Delete/{0}", new Object[]{id})).request().delete(Customer.class);
     }
 
     public <T> T getCustomersOrderByCreationDate_XML(GenericType<T> responseType) throws ClientErrorException {

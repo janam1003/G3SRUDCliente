@@ -32,6 +32,13 @@ public class User implements Serializable {
      */
     private EnumUserType userType;
 
+    public User(String mail, String password, Date creationDate, EnumUserType userType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public User() {
+    }
+
     /**
      * Gets mail value for user.
      *
