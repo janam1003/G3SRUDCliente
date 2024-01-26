@@ -1,7 +1,15 @@
 package encryption;
 
-public class EncryptionImplementation implements Encryption {
-	public static encryptWithPublicKey(String password) { 
+import java.io.FileInputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.Cipher;
+
+public class EncryptionImplementation{
+	
+    public static String encryptWithPublicKey(String password) { 
+        byte[] encryptedData = null; 
 		try {
 			// Load Public Key
 			FileInputStream fis = new FileInputStream("c:\\trastero\\publicKey.der");
@@ -17,10 +25,13 @@ public class EncryptionImplementation implements Encryption {
 			// Encrypt and send data
 			Cipher cipher = Cipher.getInstance("ECIES");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-			byte[] encryptedData = cipher.doFinal(password.getBytes());
-			return (String)encryptedData;
+			encryptedData = cipher.doFinal(password.getBytes());
+			
+                        return encryptedData.toString();
+                        
 		} catch (Exception e) {
-			throw Exception("Exception while encrypting" + e);
-		}
+			//throw LogicException("Exception while encrypting" + e);
+                }
+                return encryptedData.toString();
 	}
 }
