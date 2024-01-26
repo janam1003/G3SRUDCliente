@@ -5,6 +5,7 @@
  */
 package implementations;
 
+import static encryption.EncryptionImplementation.encryptWithPublicKey;
 import entities.Customer;
 import exception.CreateException;
 import exception.DeleteException;
@@ -111,6 +112,7 @@ public class CustomerManagerImplementation implements CustomerManager {
 
         try {
             LOGGER.info("Creating a new customer");
+            customer.setPassword(encryptWithPublicKey(customer.getPassword()));
             client.createCustomer_XML(customer);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Can't create the customer", e.getMessage());
@@ -122,6 +124,7 @@ public class CustomerManagerImplementation implements CustomerManager {
     public void updateCustomer(Customer customer) throws UpdateException {
         try {
             LOGGER.info("Updating a customer");
+            customer.setPassword(encryptWithPublicKey(customer.getPassword()));
             client.updateCustomer_XML(customer);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Can't modify the customer", e.getMessage());

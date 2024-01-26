@@ -12,26 +12,27 @@ public class EncryptionImplementation{
         byte[] encryptedData = null; 
 		try {
 			// Load Public Key
-			FileInputStream fis = new FileInputStream("c:\\trastero\\publicKey.der");
+                        //Añadir a archivo de Porpiedades ¡¡¡¡¡¡¡¡¡¡BOBO!!!!!!!!!
+			FileInputStream fis = new FileInputStream("C:\\Users\\danid\\Desktop\\Keys\\keyspublicKey.der");
 			byte[] publicKeyBytes = new byte[fis.available()];
 			fis.read(publicKeyBytes);
 			fis.close();
 
-			KeyFactory keyFactory = KeyFactory.getInstance("EC");
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
-		
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
 			// Encrypt and send data
-			Cipher cipher = Cipher.getInstance("ECIES");
+                        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedData = cipher.doFinal(password.getBytes());
 			
-                        return encryptedData.toString();
+                        return new String(encryptedData);
                         
 		} catch (Exception e) {
-			//throw LogicException("Exception while encrypting" + e);
+			System.out.print("Pene");
+                        e.printStackTrace();
                 }
-                return encryptedData.toString();
+                return new String(encryptedData);
 	}
 }
