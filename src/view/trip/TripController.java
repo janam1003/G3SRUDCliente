@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
 
 import view.generic.GenericController;
 import entities.Trip;
+import entities.TripInfo;
+import factories.TripManagerFactory;
+import interfaces.TripManager;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import javafx.collections.FXCollections;
@@ -33,11 +37,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.converter.LocalDateStringConverter;
 
 /**
  * FXML Controller class
@@ -72,31 +74,31 @@ public class TripController extends GenericController {
 	 * Table view for trips.
 	 */
 	@FXML
-	private TableView tbTrips;
+	private TableView<Trip> tableViewTrips;
 
 	/**
 	 * Table column for description.
 	 */
 	@FXML
-	private TableColumn tcDescription;
+	private TableColumn<Trip, String> tableColumnDescription;
 
 	/**
 	 * Table column for type.
 	 */
 	@FXML
-	private TableColumn tcType;
+	private TableColumn<Trip, String> tableColumnType;
 
 	/**
 	 * Table column for start.
 	 */
 	@FXML
-	private TableColumn tcStart;
+	private TableColumn<Trip, TripInfo> tableColumnStart;
 
 	/**
 	 * Table column for end.
 	 */
 	@FXML
-	private TableColumn tcEnd;
+	private TableColumn<Trip, TripInfo> tableColumnEnd;
 
 	/**
 	 * Button for print.
@@ -157,6 +159,11 @@ public class TripController extends GenericController {
 	 */
 	@FXML
 	private Label lbTripType;
+
+	/*
+	 * TripManager object 
+	 */
+	private TripManager tripManager;
 
 	/**
 	 * Method to initialize the stage.
@@ -224,6 +231,22 @@ public class TripController extends GenericController {
 			// Event for button Print
 			btPrint.setOnAction(this::btPrint);
 
+			// Set editable the table
+			tableViewTrips.setEditable(true);
+			
+			// COnfigure columns
+			tableColumnDescription.setCellValueFactory(
+                    new PropertyValueFactory<>("description"));
+            tableColumnType.setCellValueFactory(
+                    new PropertyValueFactory<>("type"));
+            tableColumnStart.setCellValueFactory(
+                    new PropertyValueFactory<>("start date"));
+            tableColumnEnd.setCellValueFactory(
+                    new PropertyValueFactory<>("end date"));
+			//Get instance of TripManager
+			tripManager = TripManagerFactory.getTripManager();
+
+
 			// Show the window
 			stage.setScene(new Scene(root));
 			stage.show();
@@ -272,7 +295,7 @@ public class TripController extends GenericController {
 	@FXML
 	private void cbSearchOptionsSelectedItemPropertyChange(ActionEvent event) {
 		// First, clear the table
-		tbTrips.getItems().clear();
+		tableViewTrips.getItems().clear();
 
 		if ("Available Trips".equals(cbSearchOptions.getValue())) {
 			lbTripType.setVisible(true);
@@ -309,10 +332,15 @@ public class TripController extends GenericController {
 			List<Trip> trips = null;
 			String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
 			if ("Available Trips".equals(selectedOption)) {
-				tbTrips.getItems().clear();
+				tableViewTrips.getItems().clear();
 				String selectedTripType = cbTripType.getSelectionModel().getSelectedItem();
 				if (selectedTripType == null || "".equals(selectedTripType)) {
-					// trips = getAllTrips();
+					trips = tripManager.findAllTrips();
+					for (Trip trip : trips) {
+						tableViewTrips.getItems().add(trip);
+
+
+					}
 				} else {
 					// trips = getTripsByType(selectedTripType);
 				}
@@ -320,7 +348,7 @@ public class TripController extends GenericController {
 				if (!rbActive.isSelected() && !rbInactive.isSelected() && !rbBoth.isSelected()) {
 					throw new Exception("You need to select one Status option");
 				}
-				tbTrips.getItems().clear();
+				tableViewTrips.getItems().clear();
 				if (rbActive.isSelected()) {
 					// trips = getActiveTripInfoByCustomer(customer);
 				} else if (rbInactive.isSelected()) {
@@ -352,7 +380,7 @@ public class TripController extends GenericController {
 			String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
 			// TripInfo tripInfo;
 			if ("Available Trips".equals(selectedOption)) {
-				// tripInfo = (TripInfo) tbTrips.getSelectionModel().getSelectedItem();
+				// tripInfo = (TripInfo) tableViewTrips.getSelectionModel().getSelectedItem();
 				// deleteTripInfo(tripInfo);
 			} else {
 				// tripInfo = new TripInfo(selectedTripInfo.getTrip(), customer);

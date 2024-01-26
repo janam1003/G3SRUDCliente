@@ -78,7 +78,6 @@ public class Trip implements Serializable {
         this.tripType = tripType;
     }
 
-    @XmlTransient
     public List<City> getCities() {
         return cities;
     }
