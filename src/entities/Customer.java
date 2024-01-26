@@ -118,6 +118,16 @@ public class Customer extends User {
         this.phone = phone;
     }
 
+    public Customer(String name, Integer zip, String address, Integer phone, List<TripInfo> tripsInfo) {
+        this.name = name;
+        this.zip = zip;
+        this.address = address;
+        this.phone = phone;
+        this.tripsInfo = tripsInfo;
+    }
+    
+    
+
     /**
      * Retrieves the list of TripInfo objects associated with this customer.
      *
