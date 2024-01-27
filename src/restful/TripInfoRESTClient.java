@@ -28,7 +28,7 @@ public class TripInfoRESTClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/netbeansBreak/webresources";
+    private static final String BASE_URI = "http://localhost:8080/dani/webresources";
 
     public TripInfoRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
