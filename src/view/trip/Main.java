@@ -1,5 +1,6 @@
 package view.trip;
 
+import entities.Customer;
 import javafx.stage.Stage;
 
 import javafx.application.Application;
@@ -16,15 +17,17 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Trip.fxml"));
             
             // Crea la escena a partir del archivo FXML
-            Parent root = loader.load();
+            Parent root = (Parent)loader.load();
             
             // Obtiene el controlador y llama a su método initStage
             TripController controller = loader.getController();
-            controller.initStage(root);
+			controller.setStage(primaryStage);
+            Customer customer = new Customer();
             
-            // Configura y muestra la escena en el escenario
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
+            customer.setMail("test@gmail.com");
+            customer.setPassword("pass");
+            controller.initStage(root, customer);
+            
         } catch(Exception e) {
             e.printStackTrace();
         }

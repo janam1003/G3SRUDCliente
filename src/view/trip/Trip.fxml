@@ -22,12 +22,12 @@
       </MenuBar>
       <Pane prefHeight="768.0" prefWidth="1366.0">
          <children>
-            <TableView fx:id="tbTrips" layoutX="47.0" layoutY="237.0" prefHeight="407.0" prefWidth="1079.0">
+            <TableView fx:id="tableViewTrips" layoutX="47.0" layoutY="237.0" prefHeight="407.0" prefWidth="1079.0">
                <columns>
-                  <TableColumn fx:id="tcDescription" prefWidth="432.5" text="Description" />
-                  <TableColumn fx:id="tcType" prefWidth="196.5" text="Type" />
-                  <TableColumn fx:id="tcStart" prefWidth="214.0" text="Start" />
-                  <TableColumn fx:id="tcEnd" prefWidth="235.0" text="End" />
+                  <TableColumn fx:id="tableColumnDescription" prefWidth="432.5" text="Description" />
+                  <TableColumn fx:id="tableColumnType" prefWidth="196.5" text="Type" />
+                  <TableColumn fx:id="tableColumnStart" prefWidth="214.0" text="Start" />
+                  <TableColumn fx:id="tableColumnEnd" prefWidth="235.0" text="End" />
                </columns>
             </TableView>
             <Button fx:id="btPrint" layoutX="47.0" layoutY="675.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="134.0" text="Print Document" />
