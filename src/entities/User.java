@@ -2,7 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
+
 
 /**
  * Entity JPA class for user data. The properties of this class are login ,
@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author javi
  */
-@XmlRootElement
+
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

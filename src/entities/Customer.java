@@ -1,8 +1,7 @@
 package entities;
 
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+
 
 /**
  * Represents a Customer entity, extending the User class and implementing
@@ -10,7 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * schema. The primary key is the email address, and it is used as a foreign key
  * in the "tripsInfo" relationship.
  */
-@XmlRootElement
+
 public class Customer extends User {
 
     private static final long serialVersionUID = 1L;
@@ -133,7 +132,7 @@ public class Customer extends User {
      *
      * @return The list of TripInfo objects associated with this customer.
      */
-    @XmlTransient
+
     public List<TripInfo> getTripsInfo() {
         return tripsInfo;
     }

@@ -2,15 +2,14 @@ package entities;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+
 
 /**
  * Entity for Trip, it has id, cities, tripType and description
  *
  * @author Iñigo
  */
-@XmlRootElement
+
 public class Trip implements Serializable {
 
     private Integer id;
@@ -53,7 +52,7 @@ public class Trip implements Serializable {
         return true;
     }
 
-    @XmlTransient
+
     public List<TripInfo> getTripInfo() {
         return tripInfo;
     }

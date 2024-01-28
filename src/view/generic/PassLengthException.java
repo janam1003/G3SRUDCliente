@@ -1,4 +1,4 @@
-package View.Generic;
+package view.generic;
 
 public class PassLengthException extends Exception{
 	public PassLengthException(){
