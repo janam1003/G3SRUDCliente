@@ -94,6 +94,19 @@ public class TripInfo implements Serializable {
     public void setLastDate(Date lastDate) {
         this.lastDate = lastDate;
     }
+	
+	public TripInfo() {
+		super();
+	}
+
+	public TripInfo(TripInfo tripInfo) {
+		super();
+		this.tripInfoId = tripInfo.getTripInfoId();
+		this.trip = tripInfo.getTrip();
+		this.customer = tripInfo.getCustomer();
+		this.initialDate = tripInfo.getInitialDate();
+		this.lastDate = tripInfo.getLastDate();
+	}
 
     @Override
     public String toString() {
