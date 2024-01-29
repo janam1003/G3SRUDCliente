@@ -2,7 +2,8 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Entity for TripInfo, which is the attribufe from the nm relation between Trip
@@ -10,7 +11,7 @@ import java.util.Date;
  *
  * @author Iñigo
  */
-
+@XmlRootElement
 public class TripInfo implements Serializable {
 
     TripInfoId tripInfoId;
@@ -62,7 +63,7 @@ public class TripInfo implements Serializable {
         this.trip = trip;
     }
 
- 
+    @XmlTransient
     public Customer getCustomer() {
         return customer;
     }
@@ -94,19 +95,6 @@ public class TripInfo implements Serializable {
     public void setLastDate(Date lastDate) {
         this.lastDate = lastDate;
     }
-	
-	public TripInfo() {
-		super();
-	}
-
-	public TripInfo(TripInfo tripInfo) {
-		super();
-		this.tripInfoId = tripInfo.getTripInfoId();
-		this.trip = tripInfo.getTrip();
-		this.customer = tripInfo.getCustomer();
-		this.initialDate = tripInfo.getInitialDate();
-		this.lastDate = tripInfo.getLastDate();
-	}
 
     @Override
     public String toString() {

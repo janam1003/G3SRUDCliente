@@ -13,20 +13,20 @@ import entities.TripInfo;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 
-public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo> {
+public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
 
     private DatePicker datePicker;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public TripInfoInitialDatePickerTableCell() {
-        createDatePicker();
+    public DatePickerTableCell() {
+
     }
 
     @Override
     public void startEdit() {
         if (!isEmpty()) {
             super.startEdit();
-
+            createDatePicker();
             setText(null);
             setGraphic(datePicker);
         }
@@ -36,12 +36,12 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
     public void cancelEdit() {
         super.cancelEdit();
 
-        // setText(getDate().format(dateFormat));
+        createDatePicker();
         setGraphic(null);
     }
 
     @Override
-    public void updateItem(TripInfo item, boolean empty) {
+    public void updateItem(LocalDate item, boolean empty) {
         super.updateItem(item, empty);
         if (empty) {
             setText(null);
@@ -49,13 +49,13 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
         } else {
             if (isEditing()) {
                 if (datePicker != null) {
-                    // datePicker.setValue(getDate());
+                    datePicker.setValue(item);
                 }
                 setText(null);
                 setGraphic(datePicker);
             } else {
                 if (item != null) {
-                    setText(Instant.ofEpochMilli(item.getInitialDate().toInstant().toEpochMilli()).atZone(ZoneId.systemDefault()).toLocalDate().toString());
+                    setText(item.format(dateFormat));
                 }
                 setGraphic(null);
 
@@ -67,22 +67,8 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
         datePicker = new DatePicker();
         datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
         datePicker.setOnAction((e) -> {
-            //obtein the object trip that is in the row
-            Trip trip = (Trip) getTableRow().getItem();
-            //obtein the tripInfo of the trip
-            TripInfo copy = trip.getTripInfo().get(0);
-
-            if (datePicker.getValue() != null) {
-                copy.setInitialDate(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                trip.getTripInfo().set(0, copy);
-                commitEdit(copy);
-            } else {
-                cancelEdit();
-            }
+            commitEdit(datePicker.getValue());
         });
-    }
 
-    // private LocalDate getDate() {
-    // 	return getItem() == null ? null : getItem().getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    // }
+    }
 }

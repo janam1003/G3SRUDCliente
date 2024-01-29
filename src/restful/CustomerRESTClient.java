@@ -28,7 +28,7 @@ public class CustomerRESTClient {
     private WebTarget webTarget;
     private Client client;
     //Referencia al RESTFUL ¡¡¡¡meter en properties!!!
-    private static final String BASE_URI = "http://localhost:8080/dani/webresources";
+    private static final String BASE_URI = "http://localhost:8080/netbeansBreak/webresources";
 
     public CustomerRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

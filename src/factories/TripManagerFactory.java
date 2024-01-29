@@ -31,7 +31,7 @@ public class TripManagerFactory {
 			 * If not loaded, create a new instance of TripManager using the
 			 * TripManagerImplementation class.
 			 */
-			tripManager = new TripManagerImplementation();
+			tripManager = (TripManager) new TripManagerImplementation();
 
 		}
 

@@ -1,1 +1,1 @@
-package restful;
+package config;

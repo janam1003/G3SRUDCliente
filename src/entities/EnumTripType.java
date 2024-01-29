@@ -10,9 +10,9 @@ public enum EnumTripType {
     LEISURE,
     SPORTS;
 
-	//Constructor with switch
-	public static EnumTripType getEnumTripType(int i) {
-		switch (i) {
+	//constructor with swicht to return from index
+	public static EnumTripType getEnumTripType(int x) {
+		switch (x) {
 			case 1:
 				return CULTURE;
 			case 2:
@@ -21,8 +21,7 @@ public enum EnumTripType {
 				return LEISURE;
 			case 4:
 				return SPORTS;
-			default:
-				return null;
 		}
+		return null;
 	}
 }

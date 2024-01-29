@@ -20,9 +20,12 @@ import factories.TripInfoManagerFactory;
 import factories.TripManagerFactory;
 import interfaces.TripInfoManager;
 import interfaces.TripManager;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.beans.Observable;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -101,13 +104,13 @@ public class TripController extends GenericController {
      * Table column for start.
      */
     @FXML
-    private TableColumn<Trip, TripInfo> tableColumnStart;
+    private TableColumn<Trip, LocalDate> tableColumnStart;
 
     /**
      * Table column for end.
      */
     @FXML
-    private TableColumn<Trip, TripInfo> tableColumnEnd;
+    private TableColumn<Trip, LocalDate> tableColumnEnd;
 
     /**
      * Button for print.
@@ -258,12 +261,13 @@ public class TripController extends GenericController {
                     new PropertyValueFactory<>("tripType"));
 
             // Configure editable columns
-            Callback<TableColumn<Trip, TripInfo>, TableCell<Trip, TripInfo>> getInitialDatePickerCellFactory = (
-                    TableColumn<Trip, TripInfo> param) -> new TripInfoInitialDatePickerTableCell();
-            tableColumnStart.setCellFactory(getInitialDatePickerCellFactory);
-            // tableColumnStart.setCellValueFactory(cellData
-            // ->cellData.getValue().tripInfoProperty());
-            tableColumnStart.setOnEditCommit((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
+            Callback<TableColumn<Trip, LocalDate>, TableCell<Trip, LocalDate>> startDatePickerCellFactory = (
+                    TableColumn<Trip, LocalDate> param) -> new DatePickerTableCell();
+            tableColumnStart.setCellFactory(startDatePickerCellFactory);
+            tableColumnStart.setCellValueFactory(factory -> {
+                return getTripInfoToLocalDateInitialDateValueFactory(factory);
+            });
+            tableColumnStart.setOnEditCommit((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
                 //call the method to update the tripInfo only if is my trips
                 if ("My Trips".equals(cbSearchOptions.getValue())) {
                     //obtein the object trip that is in the row
@@ -271,7 +275,7 @@ public class TripController extends GenericController {
                     //obtein the tripInfo of the trip
                     TripInfo copy = trip.getTripInfo().get(0);
                     //set the new date
-                    copy.setInitialDate(t.getNewValue().getInitialDate());
+                    copy.setInitialDate(Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     //update the tripInfo
                     try {
                         tripInfoManager.updateTripInfo(copy);
@@ -281,8 +285,8 @@ public class TripController extends GenericController {
                     }
                 }
             });
-            tableColumnStart.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
-            });
+            //   tableColumnStart.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
+            //   });
 
             // tableColumnStart.setCellValueFactory(cellData -> {
             // Trip trip = Trip.class.cast(cellData.getValue());
@@ -298,18 +302,20 @@ public class TripController extends GenericController {
             // formattedDate = trip.getTripInfo().get(0).getLastDate().toString();
             // return new SimpleObjectProperty(formattedDate);
             // });
-            Callback<TableColumn<Trip, TripInfo>, TableCell<Trip, TripInfo>> getLastDatePickerCellFactory = (
-                    TableColumn<Trip, TripInfo> param) -> new TripInfoLastDatePickerTableCell();
-            tableColumnEnd.setCellFactory(getLastDatePickerCellFactory);
-            // tableColumnEnd.setCellValueFactory(new PropertyValueFactory<>("lastDate"));
-            tableColumnEnd.setOnEditCommit((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
+            Callback<TableColumn<Trip, LocalDate>, TableCell<Trip, LocalDate>> lastDatePickerCellFactory = (
+                    TableColumn<Trip, LocalDate> param) -> new DatePickerTableCell();
+            tableColumnEnd.setCellFactory(lastDatePickerCellFactory);
+            tableColumnEnd.setCellValueFactory(factory -> {
+                return getTripInfoToLocalDateLastDateValueFactory(factory);
+            });
+            tableColumnEnd.setOnEditCommit((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
                 try {
                     //obtein the object trip that is in the row
                     Trip trip = (Trip) t.getTableView().getItems().get(t.getTablePosition().getRow());
                     //obtein the tripInfo of the trip
                     TripInfo tripInfo = trip.getTripInfo().get(0);
-                    //set the new date
-                    tripInfo.setLastDate(t.getNewValue().getLastDate());
+                    //set the new date;
+                    tripInfo.setLastDate(Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     //Check if initial date is before last date
                     if (tripInfo.getInitialDate().after(tripInfo.getLastDate())) {
                         throw new Exception("Initial date must be before last date");
@@ -327,8 +333,8 @@ public class TripController extends GenericController {
                     this.showErrorAlert(e.getMessage());
                 }
             });
-            tableColumnEnd.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
-            });
+            //  tableColumnEnd.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
+            // });
 
             // Get instance of TripManager
             tripManager = TripManagerFactory.getTripManager();
@@ -411,45 +417,6 @@ public class TripController extends GenericController {
         }
     }
 
-    private List<Trip> testgetTripsByType() {
-        List<Trip> returnList = new ArrayList<Trip>();
-        Trip trip = new Trip();
-        trip.setDescription("test");
-        trip.setTripType(EnumTripType.CULTURE);
-        returnList.add(trip);
-        return returnList;
-    }
-
-    private List<TripInfo> testTripInfos() {
-        List<TripInfo> returnList = new ArrayList<TripInfo>();
-        TripInfo tripInfo = new TripInfo();
-        Date initialDate = new Date();
-        Date lastDate = new Date();
-        initialDate.setTime(1546300800);
-        lastDate.setTime(1546387200);
-        tripInfo.setInitialDate(initialDate);
-        tripInfo.setLastDate(lastDate);
-        Trip trip = new Trip();
-        trip.setDescription("test");
-        trip.setTripType(EnumTripType.CULTURE);
-        tripInfo.setTrip(trip);
-        // 2nd tripinfo
-        TripInfo tripInfo2 = new TripInfo();
-        Date initialDate2 = new Date();
-        Date lastDate2 = new Date();
-        initialDate2.setTime(1646300800);
-        lastDate2.setTime(1646387200);
-        tripInfo2.setInitialDate(initialDate2);
-        tripInfo2.setLastDate(lastDate2);
-        Trip trip2 = new Trip();
-        trip2.setDescription("test2");
-        trip2.setTripType(EnumTripType.CULTURE);
-        tripInfo2.setTrip(trip2);
-        returnList.add(tripInfo2);
-        returnList.add(tripInfo);
-        return returnList;
-    }
-
     /**
      * Method to handle the action when the user clicks on the Search button
      *
@@ -465,13 +432,10 @@ public class TripController extends GenericController {
                 int index = cbTripType.getSelectionModel().getSelectedIndex();
                 if (index == -1 || index == 0) {
                     trips = tripManager.findAllTrips();
-                    //trips = testgetTripsByType();
-                } else 
-                {
+                } else {
                     trips = tripManager.findTripsByTripType(getEnumTripType(cbTripType.getSelectionModel().getSelectedIndex()));
-                    //trips = testgetTripsByType();
                 }
-                if (trips == null) {
+                if (trips == null || trips.isEmpty()) {
                     throw new Exception("There aren't any trips to be shown");
                 }
                 ObservableList<Trip> observableList = FXCollections.observableArrayList(trips);
@@ -484,13 +448,14 @@ public class TripController extends GenericController {
                 tableViewTrips.getItems().clear();
                 if (rbActive.isSelected()) {
                     tripInfos = tripInfoManager.findActiveTripInfoByCustomer(customer);
-                    //tripInfos = testTripInfos();
-                } else if (rbInactive.isSelected())
+                } else if (rbInactive.isSelected()) {
                     tripInfos = tripInfoManager.findInactiveTripInfoByCustomer(customer);
-                else
+                } else {
                     tripInfos = tripInfoManager.findAllTripInfoByCustomer(customer);
-                if (tripInfos == null)
-                    throw new Exception("There aren't any trips to be shown");
+                }
+                if (tripInfos == null || tripInfos.isEmpty()) {
+                    throw new Exception("There aren't any booked trips");
+                }
                 // Se crear una lista de trips a partir de la lista de tripinfos
                 trips = new ArrayList<Trip>();
                 for (TripInfo ti : tripInfos) {
@@ -543,7 +508,7 @@ public class TripController extends GenericController {
         } catch (Exception e) {
             // Logger
             LOGGER.severe("Exception. " + e.getMessage());
-            showErrorAlert(e.getMessage());
+            showErrorAlert("Error booking the trip: " + e.getMessage());
         }
     }
 
@@ -569,6 +534,22 @@ public class TripController extends GenericController {
     @FXML
     private void btPrint(ActionEvent event) {
         // print
+    }
+
+    private ObservableValue<LocalDate> getTripInfoToLocalDateInitialDateValueFactory(CellDataFeatures<Trip, LocalDate> factory) {
+        if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
+            return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getInitialDate()
+                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        }
+        return null;
+    }
+
+    private ObservableValue<LocalDate> getTripInfoToLocalDateLastDateValueFactory(CellDataFeatures<Trip, LocalDate> factory) {
+        if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
+            return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getLastDate()
+                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        }
+        return null;
     }
 
 }

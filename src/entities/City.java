@@ -3,7 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * It is an City entitywhich is Serializable. Containing attributes CityId,
@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Janam
  */
-
+@XmlRootElement
 public class City implements Serializable {
 
     private static final long serialVersionUID = 1L;

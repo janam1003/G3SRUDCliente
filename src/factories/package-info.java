@@ -1,1 +1,1 @@
-package factories;
+package config;

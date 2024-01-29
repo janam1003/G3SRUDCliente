@@ -1,1 +1,1 @@
-package exception;
+package config;
