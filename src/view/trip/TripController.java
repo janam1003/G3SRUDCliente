@@ -59,133 +59,150 @@ import javafx.util.Callback;
  */
 public class TripController extends GenericController {
 
-    /**
-     * Logger object used to log messages for application.
-     */
-    protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
+	/**
+	 * Logger object used to log messages for application.
+	 */
+	protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
 
-    /**
-     * Menu bar.
-     */
-    @FXML
-    private MenuBar menuBar;
+	/**
+	 * Menu bar.
+	 */
+	@FXML
+	private MenuBar menuBar;
 
-    /**
-     * Menu item for help.
-     */
-    @FXML
-    private Menu miHelp;
+	/**
+	 * Menu item for help.
+	 */
+	@FXML
+	private Menu miHelp;
 
-    /**
-     * Menu item for exit.
-     */
-    @FXML
-    private Menu miExit;
+	/**
+	 * Menu item for exit.
+	 */
+	@FXML
+	private Menu miExit;
 
-    /**
-     * Table view for trips.
-     */
-    @FXML
-    private TableView<Trip> tableViewTrips;
+	/**
+	 * Table view for trips.
+	 */
+	@FXML
+	private TableView<Trip> tableViewTrips;
 
-    /**
-     * Table column for description.
-     */
-    @FXML
-    private TableColumn<Trip, String> tableColumnDescription;
+	/**
+	 * Table column for description.
+	 */
+	@FXML
+	private TableColumn<Trip, String> tableColumnDescription;
 
-    /**
-     * Table column for type.
-     */
-    @FXML
-    private TableColumn<Trip, String> tableColumnType;
+	/**
+	 * Table column for type.
+	 */
+	@FXML
+	private TableColumn<Trip, String> tableColumnType;
 
-    /**
-     * Table column for start.
-     */
-    @FXML
-    private TableColumn<Trip, LocalDate> tableColumnStart;
+	/**
+	 * Table column for start.
+	 */
+	@FXML
+	private TableColumn<Trip, LocalDate> tableColumnStart;
 
-    /**
-     * Table column for end.
-     */
-    @FXML
-    private TableColumn<Trip, LocalDate> tableColumnEnd;
+	/**
+	 * Table column for end.
+	 */
+	@FXML
+	private TableColumn<Trip, LocalDate> tableColumnEnd;
 
-    /**
-     * Button for print.
-     */
-    @FXML
-    private Button btPrint;
+	/**
+	 * Button for print.
+	 */
+	@FXML
+	private Button btPrint;
 
-    /**
-     * Button for purchase or cancel.
-     */
-    @FXML
-    private Button btPurchaseCancel;
+	/**
+	 * Button for purchase or cancel.
+	 */
+	@FXML
+	private Button btPurchaseCancel;
 
-    /**
-     * Combo box for search options.
-     */
-    @FXML
-    private ComboBox<String> cbSearchOptions;
+	/**
+	 * Combo box for search options.
+	 */
+	@FXML
+	private ComboBox<String> cbSearchOptions;
 
-    /**
-     * Combo box for trip type.
-     */
-    @FXML
-    private ComboBox<String> cbTripType;
+	/**
+	 * Combo box for trip type.
+	 */
+	@FXML
+	private ComboBox<String> cbTripType;
 
-    /**
-     * Radio button for active.
-     */
-    @FXML
-    private RadioButton rbActive;
+	/**
+	 * Radio button for active.
+	 */
+	@FXML
+	private RadioButton rbActive;
 
-    /**
-     * Radio button for inactive.
-     */
-    @FXML
-    private RadioButton rbInactive;
+	/**
+	 * Radio button for inactive.
+	 */
+	@FXML
+	private RadioButton rbInactive;
 
-    /**
-     * Radio button for both.
-     */
-    @FXML
-    private RadioButton rbBoth;
+	/**
+	 * Radio button for both.
+	 */
+	@FXML
+	private RadioButton rbBoth;
 
-    /**
-     * Button for search.
-     */
-    @FXML
-    private Button btSearch;
+	/**
+	 * Button for search.
+	 */
+	@FXML
+	private Button btSearch;
 
-    /**
-     * Label for status.
-     */
-    @FXML
-    private Label lbStatus;
+	/**
+	 * Label for status.
+	 */
+	@FXML
+	private Label lbStatus;
 
-    /**
-     * Label for trip type.
-     */
-    @FXML
-    private Label lbTripType;
-
-    /*
+	/**
+	 * Label for trip type.
+	 */
+	@FXML
+	private Label lbTripType;
+	/**
+	 * MenuItem for book trip
+	 */
+	@FXML
+	private MenuItem menuItemBook;
+	/**
+	 * MenuItem for cancel trip
+	 */
+	@FXML
+	private MenuItem menuItemCancel;
+	/*
 	 * TripManager object
-     */
-    private TripManager tripManager;
-    /*
+	 */
+	private TripManager tripManager;
+	/*
 	 * TripInfoManager object
-     */
-    private TripInfoManager tripInfoManager;
-    /*
+	 */
+	private TripInfoManager tripInfoManager;
+	/*
 	 * Customer object
-     */
-    private Customer customer;
+	 */
+	private Customer customer;
+	/*
+	 * Date object to store previous start date value
+	 */
+	private LocalDate oldStartDate;
+	/*
+	 * Date object to store previous end date value
+	 */
+	private LocalDate oldEndDate;
 
-    /**
+	/**
      * Method to initialize the stage.
      *
      * @param root FXML document graph.
@@ -232,6 +249,12 @@ public class TripController extends GenericController {
             rbBoth.setVisible(false);
             lbStatus.setVisible(false);
 
+			// Set the menu item cancel to invisible
+			menuItemCancel.setVisible(false);
+			// Set disable both menu items
+			menuItemCancel.setDisable(true);
+			menuItemBook.setDisable(true);
+
             // The default button is the Search button
             this.btSearch.setDefaultButton(true);
 
@@ -252,6 +275,10 @@ public class TripController extends GenericController {
             btPrint.setOnAction(this::btPrint);
             // Event for table view selection change
             tableViewTrips.getSelectionModel().selectedItemProperty().addListener(this::handleSelectedItem);
+			// Event for menu item book
+			menuItemBook.setOnAction(this::btPurchaseCancelOnAction);
+			// Event for menu item cancel
+			menuItemCancel.setOnAction(this::btPurchaseCancelOnAction);
             // Set editable table
             tableViewTrips.setEditable(true);
             // Configure columns
@@ -268,40 +295,48 @@ public class TripController extends GenericController {
                 return getTripInfoToLocalDateInitialDateValueFactory(factory);
             });
             tableColumnStart.setOnEditCommit((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
-                //call the method to update the tripInfo only if is my trips
-                if ("My Trips".equals(cbSearchOptions.getValue())) {
-                    //obtein the object trip that is in the row
-                    Trip trip = (Trip) t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    //obtein the tripInfo of the trip
-                    TripInfo copy = trip.getTripInfo().get(0);
-                    //set the new date
-                    copy.setInitialDate(Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                    //update the tripInfo
-                    try {
-                        tripInfoManager.updateTripInfo(copy);
-                    } catch (LogicException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+				try {
+						//obtein the object trip that is in the row
+						Trip trip = (Trip) t.getTableView().getItems().get(t.getTablePosition().getRow());
+						Date initialDate = Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		                //call the method to update the tripInfo only if is my trips
+						if ("My Trips".equals(cbSearchOptions.getValue())) {
+							//obtein the tripInfo of the trip
+							TripInfo copy = trip.getTripInfo().get(0);
+							//Check if initial date is before last date
+							if (initialDate.after(copy.getLastDate()))
+								throw new Exception("Initial date must be before last date");
+							//set the new date
+							copy.setInitialDate(initialDate);
+							//update the tripInfo
+							try {
+								tripInfoManager.updateTripInfo(copy);
+							} catch (LogicException e) {
+								throw new Exception(e.getMessage());
+							}
+						}
+						else {
+							if (trip.getTripInfo() == null) {
+								TripInfo tripInfo = new TripInfo();
+								tripInfo.setTrip(trip);
+								tripInfo.setCustomer(customer);
+								tripInfo.setInitialDate(initialDate);
+								trip.setTripInfo(new ArrayList<TripInfo>());
+								trip.getTripInfo().add(tripInfo);
+							} else {
+								trip.getTripInfo().get(0).setInitialDate(initialDate);
+							}
+						}	
+				} catch (Exception e) {
+					LOGGER.severe("Exception in table on edit commit: . " + e);
+					// Restore old value
+					t.getRowValue().getTripInfo().get(0).setInitialDate(Date.from(oldStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+					this.showErrorAlert(e.getMessage());
                 }
             });
-            //   tableColumnStart.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
-            //   });
-
-            // tableColumnStart.setCellValueFactory(cellData -> {
-            // Trip trip = Trip.class.cast(cellData.getValue());
-            // String formattedDate = "";
-            // if (trip.getTripInfo() != null)
-            // formattedDate = trip.getTripInfo().get(0).getInitialDate().toString();
-            // return new SimpleObjectProperty(formattedDate);
-            // });
-            // tableColumnEnd.setCellValueFactory(cellData -> {
-            // Trip trip = Trip.class.cast(cellData.getValue());
-            // String formattedDate = "";
-            // if (trip.getTripInfo() != null)
-            // formattedDate = trip.getTripInfo().get(0).getLastDate().toString();
-            // return new SimpleObjectProperty(formattedDate);
-            // });
+			tableColumnStart.setOnEditStart((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
+				oldStartDate = t.getOldValue();
+			});
             Callback<TableColumn<Trip, LocalDate>, TableCell<Trip, LocalDate>> lastDatePickerCellFactory = (
                     TableColumn<Trip, LocalDate> param) -> new DatePickerTableCell();
             tableColumnEnd.setCellFactory(lastDatePickerCellFactory);
@@ -310,31 +345,53 @@ public class TripController extends GenericController {
             });
             tableColumnEnd.setOnEditCommit((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
                 try {
-                    //obtein the object trip that is in the row
-                    Trip trip = (Trip) t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    //obtein the tripInfo of the trip
-                    TripInfo tripInfo = trip.getTripInfo().get(0);
-                    //set the new date;
-                    tripInfo.setLastDate(Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-                    //Check if initial date is before last date
-                    if (tripInfo.getInitialDate().after(tripInfo.getLastDate())) {
-                        throw new Exception("Initial date must be before last date");
-                    }
-                    TripInfoId tripInfoId = new TripInfoId();
-                    tripInfoId.setTripId(trip.getId());
-                    tripInfoId.setCustomerId(customer.getMail());
-                    tripInfo.setTripInfoId(tripInfoId);
-                    tripInfo.setCustomer(customer);
-                    tripInfo.setTrip(trip);
-                    //update the tripInfo
-                    tripInfoManager.updateTripInfo(tripInfo);
+						//obtein the object trip that is in the row
+						Trip trip = (Trip) t.getTableView().getItems().get(t.getTablePosition().getRow());
+		                //Obtein the date to change
+						Date lastDate = Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+						//call the method to update the tripInfo only if is my trips
+						if ("My Trips".equals(cbSearchOptions.getValue())) {
+							//obtein the tripInfo of the trip
+							TripInfo copy = trip.getTripInfo().get(0);
+							//Check if initial date is before last date
+							if (copy.getInitialDate().after(lastDate))
+								throw new Exception("Last date must be after initial date");
+							//set the new date
+							copy.setInitialDate(lastDate);
+							//update the tripInfo
+							try {
+								tripInfoManager.updateTripInfo(copy);
+							} catch (LogicException e) {
+								throw new Exception(e.getMessage());
+							}
+						}	else {
+							if (trip.getTripInfo() == null) {
+								TripInfo tripInfo = new TripInfo();
+								tripInfo.setTrip(trip);
+								tripInfo.setCustomer(customer);
+								tripInfo.setLastDate(lastDate);
+								trip.setTripInfo(new ArrayList<TripInfo>());
+								trip.getTripInfo().add(tripInfo);
+							} else {
+								trip.getTripInfo().get(0).setLastDate(lastDate);
+							}
+						}	
                 } catch (Exception e) {
                     LOGGER.severe("Exception in table on edit commit: " + e.getMessage());
+					// Restore old value
+					t.getRowValue().getTripInfo().get(0).setLastDate(Date.from(oldEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
                     this.showErrorAlert(e.getMessage());
                 }
             });
-            //  tableColumnEnd.setOnEditCancel((TableColumn.CellEditEvent<Trip, TripInfo> t) -> {
-            // });
+			tableColumnStart.setOnEditCancel((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
+				//Put the old value on the datepicker cell
+            });
+             tableColumnEnd.setOnEditCancel((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
+				t.getRowValue().getTripInfo().get(0).setLastDate(Date.from(oldEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            });
+			tableColumnEnd.setOnEditStart((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
+				oldEndDate = t.getOldValue();
+			});
 
             // Get instance of TripManager
             tripManager = TripManagerFactory.getTripManager();
@@ -351,205 +408,284 @@ public class TripController extends GenericController {
         }
     }
 
-    /**
-     * Method to handle the action when the user clicks on the Help menu item
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void menuItemHelpOnAction(ActionEvent event) {
-        // Show the Help window as a modal window
-        Stage helpStage = new Stage();
-        // LOAD HELP WINDOW HERE
-        helpStage.initModality(Modality.APPLICATION_MODAL);
-        helpStage.showAndWait();
-    }
+	/**
+	 * Method to handle the action when the user clicks on the Help menu item
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void menuItemHelpOnAction(ActionEvent event) {
+		// Show the Help window as a modal window
+		Stage helpStage = new Stage();
+		// LOAD HELP WINDOW HERE
+		helpStage.initModality(Modality.APPLICATION_MODAL);
+		helpStage.showAndWait();
+	}
 
-    /**
-     * Method to handle the action when the user attempts to exit
-     *
-     * @param event AN action event.
-     */
-    @FXML
-    private void menuItemExitOnAction(ActionEvent event) {
-        // Display a confirmation message
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?", ButtonType.YES,
-                ButtonType.NO);
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                // LOAD LOGIN WINDOW HERE
-            }
-        });
-    }
+	/**
+	 * Method to handle the action when the user attempts to exit
+	 *
+	 * @param event AN action event.
+	 */
+	@FXML
+	private void menuItemExitOnAction(ActionEvent event) {
+		// Display a confirmation message
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?", ButtonType.YES,
+				ButtonType.NO);
+		alert.showAndWait().ifPresent(response -> {
+			if (response == ButtonType.YES) {
+				// LOAD LOGIN WINDOW HERE
+			}
+		});
+	}
 
-    /**
-     * Method to handle the action when the user selects an item in the combo
-     * box
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void cbSearchOptionsSelectedItemPropertyChange(ActionEvent event) {
-        // First, clear the table
-        tableViewTrips.getItems().clear();
+	/**
+	 * Method to handle the action when the user selects an item in the combo
+	 * box
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void cbSearchOptionsSelectedItemPropertyChange(ActionEvent event) {
+		// First, clear the table
+		tableViewTrips.getItems().clear();
 
-        if ("Available Trips".equals(cbSearchOptions.getValue())) {
-            lbTripType.setVisible(true);
-            cbTripType.setVisible(true);
-            lbStatus.setVisible(false);
-            rbActive.setVisible(false);
-            rbInactive.setVisible(false);
-            rbBoth.setVisible(false);
-            cbTripType.getSelectionModel().select("");
-            btPurchaseCancel.setText("Purchase Trip");
-            // miCancelTrip.setVisible(false);
-            // miPurchaseTrip.setVisible(true);
-        } else {
-            lbStatus.setVisible(true);
-            rbActive.setVisible(true);
-            rbInactive.setVisible(true);
-            rbBoth.setVisible(true);
-            lbTripType.setVisible(false);
-            cbTripType.setVisible(false);
-            btPurchaseCancel.setText("Cancel Trip");
-            // miCancelTrip.setVisible(true);
-            // miPurchaseTrip.setVisible(false);
-        }
-    }
+		if ("Available Trips".equals(cbSearchOptions.getValue())) {
+			lbTripType.setVisible(true);
+			cbTripType.setVisible(true);
+			lbStatus.setVisible(false);
+			rbActive.setVisible(false);
+			rbInactive.setVisible(false);
+			rbBoth.setVisible(false);
+			cbTripType.getSelectionModel().select("");
+			btPurchaseCancel.setText("Purchase Trip");
+			menuItemCancel.setVisible(false);
+			menuItemBook.setVisible(true);
+		} else {
+			lbStatus.setVisible(true);
+			rbActive.setVisible(true);
+			rbInactive.setVisible(true);
+			rbBoth.setVisible(true);
+			lbTripType.setVisible(false);
+			cbTripType.setVisible(false);
+			btPurchaseCancel.setText("Cancel Trip");
+			menuItemCancel.setVisible(true);
+			menuItemBook.setVisible(false);
+		}
+	}
 
-    /**
-     * Method to handle the action when the user clicks on the Search button
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void btSearchOnAction(ActionEvent event) {
-        try {
-            String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
-            List<Trip> trips = null;
-            if ("Available Trips".equals(selectedOption)) {
-                tableViewTrips.getItems().clear();
-                int index = cbTripType.getSelectionModel().getSelectedIndex();
-                if (index == -1 || index == 0) {
-                    trips = tripManager.findAllTrips();
-                } else {
-                    trips = tripManager.findTripsByTripType(getEnumTripType(cbTripType.getSelectionModel().getSelectedIndex()));
-                }
-                if (trips == null || trips.isEmpty()) {
-                    throw new Exception("There aren't any trips to be shown");
-                }
-                ObservableList<Trip> observableList = FXCollections.observableArrayList(trips);
-                tableViewTrips.setItems(observableList);
-            } else if ("My Trips".equals(selectedOption)) {
-                List<TripInfo> tripInfos = null;
-                if (!rbActive.isSelected() && !rbInactive.isSelected() && !rbBoth.isSelected()) {
-                    throw new Exception("You need to select one Status option");
-                }
-                tableViewTrips.getItems().clear();
-                if (rbActive.isSelected()) {
-                    tripInfos = tripInfoManager.findActiveTripInfoByCustomer(customer);
-                } else if (rbInactive.isSelected()) {
-                    tripInfos = tripInfoManager.findInactiveTripInfoByCustomer(customer);
-                } else {
-                    tripInfos = tripInfoManager.findAllTripInfoByCustomer(customer);
-                }
-                if (tripInfos == null || tripInfos.isEmpty()) {
-                    throw new Exception("There aren't any booked trips");
-                }
-                // Se crear una lista de trips a partir de la lista de tripinfos
-                trips = new ArrayList<Trip>();
-                for (TripInfo ti : tripInfos) {
-                    ti.getTrip().setTripInfo(new ArrayList<TripInfo>());
-                    Trip trip = ti.getTrip();
-                    trip.getTripInfo().add(ti);
-                    trips.add(trip);
-                }
-                tableViewTrips.getItems().setAll(trips);
-            }
-        } catch (Exception e) {
-            // Logger
-            LOGGER.severe("Exception. " + e);
-            this.showErrorAlert(e.getMessage());
-        }
-    }
+	/**
+	 * Method to handle the action when the user clicks on the Search button
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void btSearchOnAction(ActionEvent event) {
+		try {
+			String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
+			List<Trip> trips = null;
+			if ("Available Trips".equals(selectedOption)) {
+				tableViewTrips.getItems().clear();
+				int index = cbTripType.getSelectionModel().getSelectedIndex();
+				if (index == -1 || index == 0) {
+					// trips = tripManager.findAllTrips();
+					trips = testgetTripsByType();
+				} else {
+					trips = tripManager
+							.findTripsByTripType(getEnumTripType(cbTripType.getSelectionModel().getSelectedIndex()));
+				}
+				if (trips == null || trips.isEmpty()) {
+					throw new Exception("There aren't any trips to be shown");
+				}
+				ObservableList<Trip> observableList = FXCollections.observableArrayList(trips);
+				tableViewTrips.setItems(observableList);
+			} else if ("My Trips".equals(selectedOption)) {
+				List<TripInfo> tripInfos = null;
+				if (!rbActive.isSelected() && !rbInactive.isSelected() && !rbBoth.isSelected()) {
+					throw new Exception("You need to select one Status option");
+				}
+				tableViewTrips.getItems().clear();
+				if (rbActive.isSelected()) {
+					// tripInfos = tripInfoManager.findActiveTripInfoByCustomer(customer);
+					tripInfos = testTripInfos();
+				} else if (rbInactive.isSelected()) {
+					tripInfos = tripInfoManager.findInactiveTripInfoByCustomer(customer);
+				} else {
+					tripInfos = tripInfoManager.findAllTripInfoByCustomer(customer);
+				}
+				if (tripInfos == null || tripInfos.isEmpty()) {
+					throw new Exception("There aren't any booked trips");
+				}
+				// Se crear una lista de trips a partir de la lista de tripinfos
+				trips = new ArrayList<Trip>();
+				for (TripInfo ti : tripInfos) {
+					ti.getTrip().setTripInfo(new ArrayList<TripInfo>());
+					Trip trip = ti.getTrip();
+					trip.getTripInfo().add(ti);
+					trips.add(trip);
+				}
+				tableViewTrips.getItems().setAll(trips);
+			}
+		} catch (Exception e) {
+			// Logger
+			LOGGER.severe("Exception. " + e);
+			this.showErrorAlert(e.getMessage());
+		}
+	}
 
-    /**
-     * Method to handle the action when the user clicks on the Purchase/Cancel
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void btPurchaseCancelOnAction(ActionEvent event) {
-        try {
-            String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
-            Trip trip = tableViewTrips.getSelectionModel().getSelectedItem();
-            TripInfo tripInfo = new TripInfo();
-            tripInfo.setTrip(trip);
-            tripInfo.setCustomer(customer);
-            TripInfoId tripInfoId = new TripInfoId();
-            tripInfoId.setTripId(trip.getId());
-            tripInfoId.setCustomerId(customer.getMail());
-            tripInfo.setTripInfoId(tripInfoId);
-            if ("Available Trips".equals(selectedOption)) {
-                //chek if both dates are not null
-                if (trip.getTripInfo().get(0).getInitialDate() == null || trip.getTripInfo().get(0).getLastDate() == null) {
-                    throw new Exception("You need to select both dates");
-                }
-                //Check if initial date is before last date
-                if (trip.getTripInfo().get(0).getInitialDate().after(trip.getTripInfo().get(0).getLastDate())) {
-                    throw new Exception("Initial date must be before last date");
-                }
-                tripInfo.setInitialDate(trip.getTripInfo().get(0).getInitialDate());
-                tripInfo.setLastDate(trip.getTripInfo().get(0).getLastDate());
-                tripInfoManager.createTripInfo(tripInfo);
-            } else {
-                tripInfoManager.deleteTripInfo(tripInfo);
-            }
-        } catch (Exception e) {
-            // Logger
-            LOGGER.severe("Exception. " + e.getMessage());
-            showErrorAlert("Error booking the trip: " + e.getMessage());
-        }
-    }
+	/**
+	 * Method to handle the action when the user clicks on the Purchase/Cancel
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void btPurchaseCancelOnAction(ActionEvent event) {
+		try {
+			String selectedOption = cbSearchOptions.getSelectionModel().getSelectedItem();
+			Trip trip = tableViewTrips.getSelectionModel().getSelectedItem();
+			if (trip.getTripInfo() == null) {
+				throw new Exception("You need to select desired dates for the trip");
+			}
+			if ("Available Trips".equals(selectedOption)) {
+			//get the initial and end date from the table
+			Date initialDate = trip.getTripInfo().get(0).getInitialDate();
+			Date lastDate = trip.getTripInfo().get(0).getLastDate();
+			TripInfo tripInfo = new TripInfo();
+			tripInfo.setTrip(trip);
+			tripInfo.setCustomer(customer);
+			TripInfoId tripInfoId = new TripInfoId();
+			tripInfoId.setTripId(trip.getId());
+			tripInfoId.setCustomerId(customer.getMail());
+			tripInfo.setTripInfoId(tripInfoId);
+				// chek if both dates are not null
+				if (initialDate == null || lastDate == null || initialDate.equals("") || lastDate.equals("")) { 
+					throw new Exception("You need to select start and end dates");
+				}
+				// Check if initial date is before last date
+				if (initialDate.after(lastDate)) {
+					throw new Exception("Initial date must be before last date");
+				}
+				tripInfo.setInitialDate(initialDate);
+				tripInfo.setLastDate(lastDate);
+				System.out.println(tripInfo + " y " + trip);
+				//Mostrar alerta de confirmacion
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to purchase this trip?", ButtonType.YES,
+						ButtonType.NO);
+				alert.showAndWait().ifPresent(response -> {
+					if (response == ButtonType.YES) {
+						// tripInfoManager.createTripInfo(trip.getTripInfo);
+						showInfoAlert("Trip purchased successfully");
+						// Llamar al metodo de search para que se actualice la tabla
+						btSearchOnAction(event);
+					}
+				});
+			} else {
+				//Mostrar alerta de confirmacion
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to cancel this trip?", ButtonType.YES,
+						ButtonType.NO);
+				alert.showAndWait().ifPresent(response -> {
+					if (response == ButtonType.YES) {
+						// tripInfoManager.deleteTripInfo(tripInfo);
+						showInfoAlert("Trip canceled successfully");
+						// Llamar al metodo de search para que se actualice la tabla
+						btSearchOnAction(event);
+					}
+				});
+			}
+		} catch (Exception e) {
+			// Logger
+			LOGGER.severe("Exception. " + e.getMessage());
+			showErrorAlert("Error with the selected trip: " + e.getMessage());
+		}
+	}
+	//Y 
+	private void handleSelectedItem(Observable event) {
+		if (tableViewTrips.getSelectionModel().getSelectedItem() != null) {
+			// Enable edit and delete buttons and menu items
+			btPurchaseCancel.setDisable(false);
+			menuItemCancel.setDisable(false);
+			menuItemBook.setDisable(false);
+		} else {
+			// Disable edit and delete buttons and menu items
+			btPurchaseCancel.setDisable(true);
+			menuItemCancel.setDisable(true);
+			menuItemBook.setDisable(true);
+		}
+	}
 
-    private void handleSelectedItem(Observable event) {
-        if (tableViewTrips.getSelectionModel().getSelectedItem() != null) {
-            // Enable edit and delete buttons and menu items
-            btPurchaseCancel.setDisable(false);
-            // miEdit.setDisable(false);
-            // miDelete.setDisable(false);
-        } else {
-            // Disable edit and delete buttons and menu items
-            btPurchaseCancel.setDisable(true);
-            // miEdit.setDisable(true);
-            // miDelete.setDisable(true);
-        }
-    }
+	/**
+	 * Method to handle the action when the user clicks on the Print button
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void btPrint(ActionEvent event) {
+		// print
+	}
 
-    /**
-     * Method to handle the action when the user clicks on the Print button
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void btPrint(ActionEvent event) {
-        // print
-    }
+	private ObservableValue<LocalDate> getTripInfoToLocalDateInitialDateValueFactory(
+			CellDataFeatures<Trip, LocalDate> factory) {
+		if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
+			return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getInitialDate()
+					.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+		}
+		return null;
+	}
 
-    private ObservableValue<LocalDate> getTripInfoToLocalDateInitialDateValueFactory(CellDataFeatures<Trip, LocalDate> factory) {
-        if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
-            return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getInitialDate()
-                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-        return null;
-    }
+	private ObservableValue<LocalDate> getTripInfoToLocalDateLastDateValueFactory(
+			CellDataFeatures<Trip, LocalDate> factory) {
+		if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
+			return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getLastDate()
+					.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+		}
+		return null;
+	}
 
-    private ObservableValue<LocalDate> getTripInfoToLocalDateLastDateValueFactory(CellDataFeatures<Trip, LocalDate> factory) {
-        if (cbSearchOptions.getSelectionModel().getSelectedItem().equalsIgnoreCase("My trips")) {
-            return new SimpleObjectProperty<LocalDate>(factory.getValue().getTripInfo().get(0).getLastDate()
-                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-        return null;
-    }
+	private List<Trip> testgetTripsByType() {
+		List<Trip> returnList = new ArrayList<Trip>();
+		Trip trip = new Trip();
+		trip.setDescription("test");
+		trip.setTripType(EnumTripType.CULTURE);
+		returnList.add(trip);
+		Trip trip2 = new Trip();
+		trip2.setDescription("test2");
+		trip2.setTripType(EnumTripType.CULTURE);
+		returnList.add(trip2);
+		Trip trip3 = new Trip();
+		trip3.setDescription("test3");
+		trip3.setTripType(EnumTripType.CULTURE);
+		returnList.add(trip3);
+		return returnList;
+	}
+
+	private List<TripInfo> testTripInfos() {
+		List<TripInfo> returnList = new ArrayList<TripInfo>();
+		TripInfo tripInfo = new TripInfo();
+		Date initialDate = new Date();
+		Date lastDate = new Date();
+		initialDate.setTime(1546300800);
+		lastDate.setTime(1546387200);
+		tripInfo.setInitialDate(initialDate);
+		tripInfo.setLastDate(lastDate);
+		Trip trip = new Trip();
+		trip.setDescription("test");
+		trip.setTripType(EnumTripType.CULTURE);
+		tripInfo.setTrip(trip);
+		// 2nd tripinfo
+		TripInfo tripInfo2 = new TripInfo();
+		Date initialDate2 = new Date();
+		Date lastDate2 = new Date();
+		initialDate2.setTime(1646300800);
+		lastDate2.setTime(1646387200);
+		tripInfo2.setInitialDate(initialDate2);
+		tripInfo2.setLastDate(lastDate2);
+		Trip trip2 = new Trip();
+		trip2.setDescription("test2");
+		trip2.setTripType(EnumTripType.CULTURE);
+		tripInfo2.setTrip(trip2);
+		returnList.add(tripInfo2);
+		returnList.add(tripInfo);
+		return returnList;
+	}
 
 }
