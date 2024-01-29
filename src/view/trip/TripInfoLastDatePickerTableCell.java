@@ -37,7 +37,7 @@ public class TripInfoLastDatePickerTableCell extends TableCell<Trip, TripInfo>{
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText(getDate().format(dateFormat));
+        //setText(getDate().format(dateFormat));
         setGraphic(null);
     }
 
@@ -51,12 +51,12 @@ public class TripInfoLastDatePickerTableCell extends TableCell<Trip, TripInfo>{
         } else {
             if (isEditing()) {
                 if (datePicker != null) {
-                    datePicker.setValue(getDate());
+                    //datePicker.setValue(getDate());
                 }
                 setText(null);
                 setGraphic(datePicker);
             } else {
-                setText(getDate().format(dateFormat));
+               // setText(getDate().format(dateFormat));
 
                 setGraphic(null);
 
@@ -65,12 +65,16 @@ public class TripInfoLastDatePickerTableCell extends TableCell<Trip, TripInfo>{
     }
 
     private void createDatePicker() {
-        datePicker = new DatePicker(getDate());
+        datePicker = new DatePicker();
         datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
         datePicker.setOnAction((e) -> {
-            TripInfo copy = new TripInfo(getItem());
+            //obtein the object trip that is in the row
+            Trip trip = (Trip) getTableRow().getItem();
+            //obtein the tripInfo of the trip
+            TripInfo copy = trip.getTripInfo().get(0);
             if(datePicker.getValue() != null){
-                copy.setInitialDate(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                copy.setLastDate(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                trip.getTripInfo().set(0, copy);
                 commitEdit(copy);
             }else{
                 cancelEdit();
@@ -79,7 +83,7 @@ public class TripInfoLastDatePickerTableCell extends TableCell<Trip, TripInfo>{
 
     }
 
-    private LocalDate getDate() {
+   /* private LocalDate getDate() {
         return getItem() == null ? LocalDate.now() : getItem().getLastDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
+    }*/
 }

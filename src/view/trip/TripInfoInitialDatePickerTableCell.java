@@ -13,12 +13,11 @@ import entities.TripInfo;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 
+public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo> {
 
-
-public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo>{
     private DatePicker datePicker;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
+
     public TripInfoInitialDatePickerTableCell() {
 
     }
@@ -37,11 +36,10 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
     public void cancelEdit() {
         super.cancelEdit();
 
-       // setText(getDate().format(dateFormat));
+        // setText(getDate().format(dateFormat));
         setGraphic(null);
     }
 
-   
     @Override
     public void updateItem(TripInfo item, boolean empty) {
         super.updateItem(item, empty);
@@ -51,12 +49,12 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
         } else {
             if (isEditing()) {
                 if (datePicker != null) {
-                   // datePicker.setValue(getDate());
+                    // datePicker.setValue(getDate());
                 }
                 setText(null);
                 setGraphic(datePicker);
             } else {
-			
+
                 setGraphic(null);
 
             }
@@ -64,25 +62,25 @@ public class TripInfoInitialDatePickerTableCell extends TableCell<Trip, TripInfo
     }
 
     private void createDatePicker() {
-		datePicker = new DatePicker();
+        datePicker = new DatePicker();
         datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
         datePicker.setOnAction((e) -> {
-			//obtein the object trip that is in the row
-			Trip trip = (Trip) getTableRow().getItem();
-			//obtein the tripInfo of the trip
-			TripInfo copy = trip.getTripInfo().get(0);
+            //obtein the object trip that is in the row
+            Trip trip = (Trip) getTableRow().getItem();
+            //obtein the tripInfo of the trip
+            TripInfo copy = trip.getTripInfo().get(0);
 
-            if(datePicker.getValue() != null){
+            if (datePicker.getValue() != null) {
                 copy.setInitialDate(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 trip.getTripInfo().set(0, copy);
-				commitEdit(copy);
-            }else{
+                commitEdit(copy);
+            } else {
                 cancelEdit();
             }
         });
     }
 
-	// private LocalDate getDate() {
-	// 	return getItem() == null ? null : getItem().getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-	// }
+    // private LocalDate getDate() {
+    // 	return getItem() == null ? null : getItem().getInitialDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    // }
 }

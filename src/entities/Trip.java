@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
@@ -52,7 +53,7 @@ public class Trip implements Serializable {
         return true;
     }
 
-
+    @XmlTransient
     public List<TripInfo> getTripInfo() {
         return tripInfo;
     }
