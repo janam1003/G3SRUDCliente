@@ -35,7 +35,7 @@
                   <ContextMenu>
                     <items>
                       <MenuItem fx:id="menuItemBook" mnemonicParsing="false" text="Book Trip" />
-                      <MenuItem fx:id="menuItemCancel" mnemonicParsing="false" text="Book Trip" />
+                      <MenuItem fx:id="menuItemCancel" mnemonicParsing="false" text="Cancel Trip" />
                     </items>
                   </ContextMenu>
                </contextMenu>

@@ -80,7 +80,7 @@ public class TripInfoManagerImplementation implements TripInfoManager {
     public void deleteTripInfo(TripInfo tripInfo) throws LogicException {
         try {
             LOGGER.info("TripInfoManager: Deleting trip info from REST service (XML).");
-            webClient.delete(tripInfo.getTripInfoId().getCustomerId(), tripInfo.getTripInfoId().getCustomerId());
+            webClient.delete(tripInfo.getTripInfoId().getCustomerId(), tripInfo.getTripInfoId().getTripId().toString());
         } catch (ClientErrorException ex) {
             LOGGER.log(Level.SEVERE, "TripInfoManager: Exception deleting trip info, {0}", ex.getMessage());
             throw new LogicException("Error deleting trip info:\n" + ex.getMessage());

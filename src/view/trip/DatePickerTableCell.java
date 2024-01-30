@@ -17,6 +17,7 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
 
     private DatePicker datePicker;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static String oldValue;
 
     public DatePickerTableCell() {
 
@@ -28,6 +29,7 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
             super.startEdit();
             createDatePicker();
             setText(null);
+            oldValue = getText();
             setGraphic(datePicker);
         }
     }
@@ -38,6 +40,7 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
 
         createDatePicker();
         setGraphic(null);
+        setText(oldValue);
     }
 
     @Override
