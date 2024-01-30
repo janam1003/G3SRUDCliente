@@ -1,6 +1,7 @@
 package view.generic;
 
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.Event;
@@ -126,5 +127,41 @@ public class GenericController {
 
             LOGGER.log(Level.SEVERE, errorMsg);
         }
+    }
+    
+    /**
+     * Shows the content of a password field replacing it with a text field.
+     *
+     * @param Eye The FontAwesomeIcon that will be changed.
+     * @param pfPassword The password field that will be hidden or shown.
+     * @param tfPasswordReveal The text field that will be hidden or shown.
+     */
+    protected void showPassword(FontAwesomeIcon Eye, PasswordField pfPassword, TextField tfPasswordReveal) {
+
+        // Logger
+        LOGGER.info("Initializing show password.");
+
+        // We check if the password field is visible or not.
+        Boolean passwordVisible = pfPassword.isVisible();
+
+        // We change the icon depending on the visibility of the password field.
+        if (pfPassword.isVisible()) {
+
+            Eye.setGlyphName("MINUS");
+
+            tfPasswordReveal.setText(pfPassword.getText());
+
+        } else {
+
+            Eye.setGlyphName("EYE");
+
+            pfPassword.setText(tfPasswordReveal.getText());
+
+        }
+
+        // We change the visibility of the password field and the text field.
+        pfPassword.setVisible(!passwordVisible);
+
+        tfPasswordReveal.setVisible(passwordVisible);
     }
 }
