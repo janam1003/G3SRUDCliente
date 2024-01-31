@@ -23,6 +23,8 @@ import interfaces.TripManager;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
@@ -52,6 +54,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * FXML Controller class
@@ -627,7 +637,20 @@ public class TripController extends GenericController {
      */
     @FXML
     private void btPrint(ActionEvent event) {
-        // print
+        try {
+            // Load the Jasper report from its path
+            JasperReport jasperReport = JasperCompileManager.compileReport("/view/trip/TripReport.jrxml");
+            // Create a map to pass any parameters to the report
+            Map<String, Object> parameters = new HashMap<>();
+            // Convert the data to JRBeanCollectionDataSource as JasperReport accepts data in this format
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(tableViewTrips.getItems());
+            // Fill the report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(TripController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private ObservableValue<LocalDate> getTripInfoToLocalDateInitialDateValueFactory(
