@@ -21,12 +21,11 @@ public interface UserManager {
     /**
      * Retrieves a customer by their email address.
      *
-     * @param mail The email address of the user.
-     * @param password The password of the user
+     * @param user to log in
      * @return The user with the specified email address.
      * @throws ReadException If there is any Exception during processing.
      */
-    public User signIn(String mail, String password) throws ReadException;
+    public User signIn(User user) throws ReadException;
         /**
      * Retrieves a user by their email address.
      *

@@ -59,10 +59,10 @@
                <contextMenu>
                   <ContextMenu>
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Add" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                        <MenuItem mnemonicParsing="false" text="Print" />
-                        <MenuItem mnemonicParsing="false" text="Help" />
+                      <MenuItem fx:id="cmmiAdd" mnemonicParsing="false" text="Add" />
+                        <MenuItem fx:id="cmmiDelete" mnemonicParsing="false" text="Delete" />
+                        <MenuItem fx:id="cmmiPrint" mnemonicParsing="false" text="Print" />
+                        <MenuItem fx:id="cmmiHelp" mnemonicParsing="false" text="Help" />
                     </items>
                   </ContextMenu>
                </contextMenu>

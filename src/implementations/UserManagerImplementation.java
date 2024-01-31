@@ -5,6 +5,7 @@
  */
 package implementations;
 
+import static encryption.EncryptionImplementation.encryptWithPublicKey;
 import entities.User;
 import exception.CreateException;
 import exception.DeleteException;
@@ -62,11 +63,13 @@ public class UserManagerImplementation implements UserManager {
     }
 
     @Override
-    public User signIn(String mail, String password) throws ReadException {
+    public User signIn(User user) throws ReadException {
      try {
-            client.signIn_XML(User.class, mail, password);
-            return new User();
+           user.setPassword(encryptWithPublicKey(user.getPassword())); 
+           user = client.signIn_XML(user, User.class);
+           return new User(user.getMail(),user.getPassword(),user.getCreationDate(),user.getUserType());
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.log(Level.SEVERE, "Can't get the user", e.getMessage());
             throw new ReadException(e.getMessage());
             

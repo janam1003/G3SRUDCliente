@@ -33,7 +33,10 @@ public class User implements Serializable {
     private EnumUserType userType;
 
     public User(String mail, String password, Date creationDate, EnumUserType userType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mail = mail;
+        this.password = password;
+        this.creationDate = creationDate;
+        this.userType = userType;
     }
 
     public User() {

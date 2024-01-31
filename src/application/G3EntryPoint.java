@@ -1,11 +1,22 @@
 package application;
 
+import encryption.EncryptionImplementation;
 import entities.Customer;
 import entities.EnumTripType;
+import entities.EnumUserType;
 import entities.Trip;
 import entities.TripInfo;
 import entities.TripInfoId;
+import entities.User;
+import exception.CreateException;
+import exception.ReadException;
+import factories.CustomerManagerFactory;
+import factories.UserManagerFactory;
+import interfaces.CustomerManager;
+import interfaces.UserManager;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import restful.CustomerRESTClient;
 import restful.TripInfoRESTClient;
 import restful.TripRESTclient;
@@ -15,52 +26,33 @@ public class G3EntryPoint {
 
     public static void main(String[] args) {
         // Create instances of your REST clients
-        TripRESTclient tripClient = new TripRESTclient();
-        TripInfoRESTClient tripInfoClient = new TripInfoRESTClient();
         CustomerRESTClient customerClient = new CustomerRESTClient();
-        UserRESTClient userClient = new UserRESTClient();
+        CustomerManager mang = CustomerManagerFactory.getCustomerManager();
+        UserManager manU = UserManagerFactory.getUserManager();
+        User user = new User();
+        User user2 = new User();
+
 
         try {
-           // Create a new Trip
-        Trip trip = new Trip();
-        trip.setId(8);
-        trip.setDescription("Test cambiadoo");
-        trip.setTripType(EnumTripType.CULTURE);
-        tripClient.update(trip);
-
-        // Create a new Customer
-        Customer customer = new Customer();
-        customer.setMail("test4@mail.com");
-        customer.setPassword("testPAssword");
-        customer.setName("Test cambiadoo");
-        customer.setZip(12345);
-        customer.setAddress("Test address");
-        customer.setPhone(1234567890);
-        customerClient.updateCustomer_XML(customer);
-
-        // Create a new TripInfo
-        TripInfo tripInfo = new TripInfo();
-        TripInfoId tripInfoId = new TripInfoId(8, "test4@mail.com");
-        tripInfo.setTripInfoId(tripInfoId);
-        trip.setId(8);
-        Date date1 = new Date(2024,10,10);
-        tripInfo.setInitialDate(date1);
-        tripInfo.setTrip(trip);
-        tripInfo.setCustomer(customer);
-        tripInfoClient.update(tripInfo);
+            Customer cust= new Customer();
+            cust.setMail("porfaporfa1@mail.com");
+            cust.setUserType(EnumUserType.CUSTOMER);
+            cust.setPassword("uwu");
+            cust.setCreationDate(null);
+            try {
+                mang.createCustomer(cust);
+            } catch (CreateException ex) {
+                Logger.getLogger(G3EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            user2.setMail("porfaporfa1@mail.com");
+            user2.setPassword("uwu");
             
-
-        // Close the clients
-        tripClient.close();
-        tripInfoClient.close();
-        customerClient.close();
-        userClient.close();
-        } finally {
-            // Close the clients to release resources
-            tripClient.close();
-            tripInfoClient.close();
-            customerClient.close();
-            userClient.close();
+            
+            user=manU.signIn(user2);
+            System.out.println("PORFAA USER DEVUELTO: " + user);
+        } catch (ReadException ex) {
+            Logger.getLogger(G3EntryPoint.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+
 }
+    }

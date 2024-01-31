@@ -107,6 +107,7 @@ public class CustomerManagerImplementation implements CustomerManager {
         return customers;
     }
 
+
     @Override
     public void createCustomer(Customer customer) throws CreateException {
 
@@ -116,15 +117,17 @@ public class CustomerManagerImplementation implements CustomerManager {
             client.createCustomer_XML(customer);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Can't create the customer", e.getMessage());
-            throw new CreateException(e.getMessage());
+            //throw new CreateException(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void updateCustomer(Customer customer) throws UpdateException {
+    public void updateCustomer(Customer customer, Boolean encrypted) throws UpdateException {
         try {
             LOGGER.info("Updating a customer");
-            customer.setPassword(encryptWithPublicKey(customer.getPassword()));
+            if(!encrypted){
+            customer.setPassword(encryptWithPublicKey(customer.getPassword()));}
             client.updateCustomer_XML(customer);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Can't modify the customer", e.getMessage());

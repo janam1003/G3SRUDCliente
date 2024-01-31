@@ -23,7 +23,7 @@ public class Customer extends User {
     /**
      * The zip code of the customer's address.
      */
-    private Integer zip;
+    private String zip;
 
     /**
      * The address of the customer.
@@ -33,7 +33,7 @@ public class Customer extends User {
     /**
      * The phone number of the customer.
      */
-    private Integer phone;
+    private String phone;
 
     /**
      * A list of TripInfo objects associated with this customer.
@@ -69,7 +69,7 @@ public class Customer extends User {
      *
      * @return The zip code of the customer's address.
      */
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
@@ -78,7 +78,7 @@ public class Customer extends User {
      *
      * @param zip The new zip code of the customer's address.
      */
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 
@@ -105,7 +105,7 @@ public class Customer extends User {
      *
      * @return The phone number of the customer.
      */
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
@@ -114,11 +114,11 @@ public class Customer extends User {
      *
      * @param phone The new phone number of the customer.
      */
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public Customer(String name, Integer zip, String address, Integer phone, List<TripInfo> tripsInfo) {
+    public Customer(String name, String zip, String address, String phone, List<TripInfo> tripsInfo) {
         this.name = name;
         this.zip = zip;
         this.address = address;

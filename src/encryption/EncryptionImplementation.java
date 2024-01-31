@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import javax.crypto.Cipher;
 
 public class EncryptionImplementation{
@@ -26,11 +27,9 @@ public class EncryptionImplementation{
                         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedData = cipher.doFinal(password.getBytes());
-			
-                        return new String(encryptedData);
+                        return Base64.getEncoder().encodeToString(encryptedData);
                         
 		} catch (Exception e) {
-			System.out.print("Pene");
                         e.printStackTrace();
                 }
                 return new String(encryptedData);

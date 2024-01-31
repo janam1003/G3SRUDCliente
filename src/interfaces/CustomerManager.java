@@ -72,7 +72,7 @@ public interface CustomerManager {
      * @param customer The customer to be updated.
      * @throws UpdateException If there is any Exception during processing.
      */
-    public void updateCustomer(Customer customer) throws UpdateException;
+    public void updateCustomer(Customer customer, Boolean encrypted) throws UpdateException;
 
     /**
      * Deletes a customer by their ID.
