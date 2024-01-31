@@ -29,7 +29,7 @@ public class TripInfoManagerFactory {
 	 * 
 	 * @return TripInfoManager instance
 	 */
-	public static TripInfoManager getTripManager() {
+	public static TripInfoManager getTripInfoManager() {
 		// Logger
 		LOGGER.info("Initializing TripManagerFactory.");
 

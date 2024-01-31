@@ -75,6 +75,17 @@ public class GenericController {
         alert.showAndWait();
     }
 
+	/**
+	 * Shows an infomation alert dialog.
+	 * @param infoMsg The information message to be shown.
+	 */
+	protected void showInfoAlert(String infoMsg) {
+		//Shows info dialog.
+		Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
+		alert.getDialogPane();
+		alert.showAndWait();
+	}
+	
     /**
      * Handles the action when the user attempts to exit the application or
      * view.

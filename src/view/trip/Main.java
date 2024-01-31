@@ -1,11 +1,23 @@
 package view.trip;
 
+import entities.Customer;
+import entities.EnumTripType;
+import entities.Trip;
+import entities.TripInfo;
+import entities.TripInfoId;
+import java.util.Date;
+import java.util.List;
 import javafx.stage.Stage;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javax.ws.rs.core.GenericType;
+import restful.CustomerRESTClient;
+import restful.TripInfoRESTClient;
+import restful.TripRESTclient;
+import restful.UserRESTClient;
 
 public class Main extends Application {
 
@@ -14,18 +26,21 @@ public class Main extends Application {
         try {
             // Carga el archivo FXML del controlador
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Trip.fxml"));
-            
+
             // Crea la escena a partir del archivo FXML
-            Parent root = loader.load();
-            
+            Parent root = (Parent) loader.load();
+
             // Obtiene el controlador y llama a su método initStage
             TripController controller = loader.getController();
-            controller.initStage(root);
-            
-            // Configura y muestra la escena en el escenario
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-        } catch(Exception e) {
+            controller.setStage(primaryStage);
+            Customer customer = new Customer();
+
+            customer.setMail("test@gmail.com");
+
+
+            controller.initStage(root, customer);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
