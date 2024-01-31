@@ -1,92 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="950" pageHeight="595" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2d0001da-1570-42e3-913e-9fb5b206d57c">
-    <property name="ireport.zoom" value="1.3310000000000004"/>
-    <property name="ireport.x" value="81"/>
-    <property name="ireport.y" value="0"/>
-    <field name="trip.description" class="java.lang.String"/>
-    <field name="trip.tripType" class="entities.EnumTripType"/>
-    <field name="initialDate" class="java.util.Date"/>
-    <field name="lastDate" class="java.util.Date"/>
-    <background>
-        <band splitType="Stretch"/>
-    </background>
-    <title>
-        <band height="79" splitType="Stretch">
-            <staticText>
-                <reportElement x="372" y="21" width="164" height="33" uuid="6e81e16f-46d4-499b-960e-2f201feb78a4"/>
-                <textElement textAlignment="Center">
-                    <font size="20" isBold="true"/>
-                </textElement>
-                <text><![CDATA[PRODUCTS]]></text>
-            </staticText>
-        </band>
-    </title>
-    <pageHeader>
-        <band height="35" splitType="Stretch"/>
-    </pageHeader>
-    <columnHeader>
-        <band height="61" splitType="Stretch">
-            <staticText>
-                <reportElement x="74" y="0" width="65" height="20" uuid="02335bc6-9479-409f-8c51-1d021e2e021c"/>
-                <textElement textAlignment="Center">
-                    <font isBold="true" isUnderline="true"/>
-                </textElement>
-                <text><![CDATA[BRAND]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="269" y="0" width="65" height="20" uuid="8a06c6ce-3f4b-4700-9101-e368d6e2a524"/>
-                <textElement textAlignment="Center">
-                    <font isBold="true" isUnderline="true"/>
-                </textElement>
-                <text><![CDATA[PRICE]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="334" y="0" width="173" height="20" uuid="a12be578-31c4-4c06-8d2f-43986f2e4e0c"/>
-                <textElement textAlignment="Center">
-                    <font isBold="true" isUnderline="true"/>
-                </textElement>
-                <text><![CDATA[DESCRIPTION]]></text>
-            </staticText>
-            <staticText>
-                <reportElement x="507" y="0" width="146" height="20" uuid="36075169-9c18-48db-a299-3b38c0351515"/>
-                <textElement textAlignment="Center">
-                    <font isBold="true" isUnderline="true"/>
-                </textElement>
-                <text><![CDATA[OTHER INFORMATION]]></text>
-            </staticText>
-        </band>
-    </columnHeader>
-    <detail>
-        <band height="21" splitType="Stretch">
-            <textField>
-                <reportElement x="0" y="1" width="74" height="20" uuid="ab088397-3d28-4c04-8c05-3b46fe8bec35"/>
-                <textElement textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="74" y="0" width="65" height="20" uuid="a4114f3e-47bc-40a2-ab90-62e78049d7f5"/>
-                <textElement textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{tripType}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="139" y="0" width="65" height="20" uuid="57ed5040-4147-4de2-89a1-cc33d10a5545"/>
-                <textElement textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{tripInfo.initialDate}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="204" y="0" width="65" height="20" uuid="be7f0eb9-e999-449b-9275-9f3bd826f0eb"/>
-                <textElement textAlignment="Center"/>
-                <textFieldExpression><![CDATA[$F{tripInfo.lastDate}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-    <columnFooter>
-        <band height="45" splitType="Stretch"/>
-    </columnFooter>
-    <pageFooter>
-        <band height="54" splitType="Stretch"/>
-    </pageFooter>
-    <summary>
-        <band height="42" splitType="Stretch"/>
-    </summary>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Trip Infos" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f5ede580-789e-483d-aa7f-7fc97f683ba1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="trip.description" class="java.lang.String"/>
+	<field name="trip.tripType" class="entities.EnumTripType"/>
+	<field name="initialDate" class="java.util.Date"/>
+	<field name="lastDate" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="222" y="31" width="100" height="20" uuid="4795ddc7-9d6f-48fc-97a5-49f6cdd950f4"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trip Infos Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="3c57bfdd-630f-44d9-aa2a-4aea0c3acea5"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="0" width="100" height="20" uuid="425fa71e-a67f-4289-8c48-996d0c27bc19"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TRIP TYPE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="0" width="100" height="20" uuid="34dffb49-c56b-4b27-8766-22206c041df8"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[INITIAL DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="433" y="0" width="100" height="20" uuid="219e03ad-721d-4e91-9e21-e6b83c4f8775"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[LAST DATE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="30fd4ab3-64ee-4442-8ee6-ea06053af4d4"/>
+				<textFieldExpression><![CDATA[$F{trip.description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="134" y="0" width="100" height="20" uuid="004ba695-3586-48ac-b96f-995ff80539ba"/>
+				<textFieldExpression><![CDATA[$F{trip.tripType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="309" y="0" width="100" height="20" uuid="1befe05c-85f7-4475-8ac3-ddf4012902e6"/>
+				<textFieldExpression><![CDATA[$F{initialDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="433" y="1" width="100" height="20" uuid="d4af3256-21c4-49d2-a8f5-f641076490f1"/>
+				<textFieldExpression><![CDATA[$F{lastDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
 </jasperReport>
