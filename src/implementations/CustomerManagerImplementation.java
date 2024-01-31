@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package implementations;
 
 import static encryption.EncryptionImplementation.encryptWithPublicKey;
@@ -15,6 +10,7 @@ import interfaces.CustomerManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericType;
 import restful.CustomerRESTClient;
 
@@ -23,12 +19,13 @@ import restful.CustomerRESTClient;
  * @author danid
  */
 public class CustomerManagerImplementation implements CustomerManager {
-    /**
-	 * Logger object used to log messages for application.
-	 */
-	protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
 
-    private CustomerRESTClient client = new CustomerRESTClient();
+    /**
+     * Logger object used to log messages for application.
+     */
+    protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
+
+    private final CustomerRESTClient client = new CustomerRESTClient();
 
     @Override
     public List<Customer> findAllCustomers() throws ReadException {
@@ -107,7 +104,6 @@ public class CustomerManagerImplementation implements CustomerManager {
         return customers;
     }
 
-
     @Override
     public void createCustomer(Customer customer) throws CreateException {
 
@@ -126,8 +122,9 @@ public class CustomerManagerImplementation implements CustomerManager {
     public void updateCustomer(Customer customer, Boolean encrypted) throws UpdateException {
         try {
             LOGGER.info("Updating a customer");
-            if(!encrypted){
-            customer.setPassword(encryptWithPublicKey(customer.getPassword()));}
+            if (!encrypted) {
+                customer.setPassword(encryptWithPublicKey(customer.getPassword()));
+            }
             client.updateCustomer_XML(customer);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Can't modify the customer", e.getMessage());
@@ -137,7 +134,7 @@ public class CustomerManagerImplementation implements CustomerManager {
 
     @Override
     public void deleteCustomer(String customerId) throws DeleteException {
-               try {
+        try {
             LOGGER.info("Deleting the customer");
             client.deleteCustomer(customerId);
         } catch (Exception e) {
@@ -146,4 +143,21 @@ public class CustomerManagerImplementation implements CustomerManager {
         }
     }
 
+    /**
+     * Sends a recovery email to the customer.
+     *
+     * @param customer The customer to whom the recovery email should be sent.
+     * @throws ReadException If there is any issue during the process.
+     */
+    @Override
+    public void sendRecoveryMail(Customer customer) throws ReadException {
+        try {
+            LOGGER.info("Sending an email to the customer for recovery.");
+            client.sendRecoveryEmail(customer);
+            LOGGER.info("Recovery email sent successfully.");
+        } catch (WebApplicationException e) {
+            LOGGER.log(Level.SEVERE, "Error sending a recovery email to the customer.", e.getMessage());
+            throw new ReadException("Error sending recovery email: " + e.getMessage());
+        }
+    }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package implementations;
 
 import static encryption.EncryptionImplementation.encryptWithPublicKey;
@@ -14,7 +9,6 @@ import exception.UpdateException;
 import interfaces.UserManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import restful.CustomerRESTClient;
 import restful.UserRESTClient;
 
 /**
@@ -67,6 +61,10 @@ public class UserManagerImplementation implements UserManager {
      try {
            user.setPassword(encryptWithPublicKey(user.getPassword())); 
            user = client.signIn_XML(user, User.class);
+           
+           if(user==null){
+               return null;
+           }
            return new User(user.getMail(),user.getPassword(),user.getCreationDate(),user.getUserType());
         } catch (Exception e) {
             e.printStackTrace();

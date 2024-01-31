@@ -1,6 +1,12 @@
 package view.signin;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import entities.Customer;
+import static entities.EnumUserType.ADMIN;
+import static entities.EnumUserType.CUSTOMER;
+import entities.User;
+import factories.UserManagerFactory;
+import interfaces.UserManager;
 import java.util.regex.Pattern;
 import view.generic.GenericController;
 import view.signup.SignUpController;
@@ -16,7 +22,9 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import view.customer.CustomerListController;
 import view.sendmail.SendMailController;
+import view.trip.TripController;
 
 /**
  * FXML Controller class
@@ -164,6 +172,72 @@ public class LoginController extends GenericController {
             Pattern pattern = Pattern.compile(mailPattern);
             if (!pattern.matcher(tfMail.getText()).matches()) {
                 throw new Exception("Error, el mail no es valido");
+            }
+
+            User user = new User();
+
+            user.setMail(tfMail.getText());
+
+            user.setPassword(pfPassword.getText());
+
+            UserManager userManager = UserManagerFactory.getUserManager();
+
+            user = userManager.signIn(user);
+
+            if (user == null) {
+
+                // Handle the case when the user is not logged in.
+                showErrorAlert("Login failed. Please check your credentials.");
+
+                // Handle the case when the user is an admin.
+            } else if (user.getUserType() == ADMIN) {
+
+                LOGGER.info("Initializing start method to open signin window.");
+
+                // Load the FXML file
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/customer/CustomerList.fxml"));
+
+                // Get the root
+                Parent root = (Parent) loader.load();
+
+                // Get the controller
+                CustomerListController controller = (CustomerListController) loader.getController();
+
+                // Set the stage
+                controller.setStage(stage);
+
+                // Initialize the stage
+                controller.initStage(root);
+
+                // Handle the case when the user is a customer.
+            } else if (user.getUserType() == CUSTOMER) {
+
+                LOGGER.info("Initializing start method to open signin window.");
+
+                // Load the FXML file
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/trip/Trip.fxml"));
+
+                // Get the root
+                Parent root = (Parent) loader.load();
+
+                // Get the controller
+                TripController controller = (TripController) loader.getController();
+
+                // Set the stage
+                controller.setStage(stage);
+                
+                //create the object of the logged customer
+                Customer customer = new Customer();
+                
+                customer.setMail(user.getMail());
+                // Initialize the stage
+                controller.initStage(root, customer);
+
+            } else {
+
+                // Handle the case when the user type is neither admin nor customer.
+                showErrorAlert("An unexpected error occurred. Please try again later.");
+
             }
 
         } catch (Exception e) {
