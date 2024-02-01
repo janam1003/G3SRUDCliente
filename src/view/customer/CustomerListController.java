@@ -6,6 +6,7 @@
 package view.customer;
 
 import entities.Customer;
+import entities.EnumUserType;
 import exception.CreateException;
 import exception.CredentialException;
 import exception.DeleteException;
@@ -16,6 +17,8 @@ import interfaces.CustomerManager;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -96,7 +99,9 @@ public class CustomerListController extends GenericController {
     private MenuItem cmmiHelp;
 
     CustomerManager mang = CustomerManagerFactory.getCustomerManager();
+
     public void initStage(Parent root) {
+
         try {
 
             Scene scene = new Scene(root);
@@ -143,7 +148,7 @@ public class CustomerListController extends GenericController {
                     } else {
                         customer.setName(t.getNewValue());
                     }
-                     mang.updateCustomer(customer, true);
+                    mang.updateCustomer(customer, true);
 
                 } catch (UpdateException e) {
                     customer.setName(t.getOldValue());
@@ -161,6 +166,7 @@ public class CustomerListController extends GenericController {
                 Customer customer = ((Customer) t.getTableView().getItems().get(
                         t.getTablePosition().getRow()));
                 try {
+                    String oldMail;
                     if (t.getNewValue().length() > 254) {
                         throw new CredentialException("Mail cannot exceed 254 characters");
                     } else if (t.getNewValue().equals("")) {
@@ -168,16 +174,21 @@ public class CustomerListController extends GenericController {
                     } else if (validateField(t.getNewValue(), mailPattern)) {
                         throw new CredentialException("Make sure that the mail is well written");
                     } else {
+                        oldMail = t.getOldValue();
                         customer.setMail(t.getNewValue());
+
                     }
                     mang.updateCustomer(customer, true);
+                    mang.deleteCustomer(oldMail);
 
                 } catch (UpdateException e) {
                     customer.setMail(t.getOldValue());
                     this.showErrorAlert("Unable to modify the mail");
                 } catch (CredentialException e) {
-                    customer.setName(t.getOldValue());
+                    customer.setMail(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                } catch (DeleteException ex) {
+                    Logger.getLogger(CustomerListController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
 
@@ -293,7 +304,7 @@ public class CustomerListController extends GenericController {
             cbSearchFilters.getSelectionModel().selectedItemProperty().addListener(this::handleOnComboBoxChange);
             tfMail.textProperty().addListener(this::handleTestFielPropertyChange);
             tvCustomers.getSelectionModel().selectedItemProperty().addListener(this::handleSelectRowChange);
-            
+
             //Not developed additions
             btnPrintDocument.setOnAction(this::handleStillDev);
             btnShowTrips.setOnAction(this::handleStillDev);
@@ -303,9 +314,7 @@ public class CustomerListController extends GenericController {
             menuTrips.setOnAction(this::handleStillDev);
             cmmiHelp.setOnAction(this::handleStillDev);
             cmmiPrint.setOnAction(this::handleStillDev);
-            
 
-            
             stage.setScene(scene);
             stage.show();
 
@@ -314,165 +323,117 @@ public class CustomerListController extends GenericController {
         }
     }
 
-    /**
- * Handles the change in selection of the ComboBox by updating the displayed customers
- * based on the selected option.
- *
- * @param observable The observable value being watched.
- * @param oldValue   The old value before the change.
- * @param newValue   The new value after the change.
- */
-private void handleOnComboBoxChange(ObservableValue observable, Object oldValue, Object newValue) {
-    try {
-        switch (newValue.toString()) {
-            case "Every Customer":
-                customers = FXCollections.observableArrayList(mang.findAllCustomers());
-                tvCustomers.setItems(customers);
-                tvCustomers.refresh();
-                break;
-            case "Customer with trips":
-                customers = FXCollections.observableArrayList(mang.findCustomersWithTrips());
-                tvCustomers.setItems(customers);
-                tvCustomers.refresh();
-                break;
-            case "Customers with one week trips":
-                customers = FXCollections.observableArrayList(mang.findOneWeekTrips());
-                tvCustomers.setItems(customers);
-                tvCustomers.refresh();
-                break;
+    private void handleOnComboBoxChange(ObservableValue observable, Object oldValue, Object newValue) {
+        try {
+
+            switch (newValue.toString()) {
+                case "Every Customer":
+                    customers = FXCollections.observableArrayList(mang.findAllCustomers());
+                    tvCustomers.setItems(customers);
+                    tvCustomers.refresh();
+                    break;
+                case "Customer with trips":
+                    customers = FXCollections.observableArrayList(mang.findCustomersWithTrips());
+                    tvCustomers.setItems(customers);
+                    tvCustomers.refresh();
+                    break;
+                case "Customers with one week trips":
+                    customers = FXCollections.observableArrayList(mang.findOneWeekTrips());
+                    tvCustomers.setItems(customers);
+                    tvCustomers.refresh();
+                    break;
+            }
+        } catch (ReadException e) {
+            this.showErrorAlert("Error getting the stored customers");
         }
-    } catch (ReadException e) {
-        this.showErrorAlert("Error getting the stored customers");
     }
-}
 
-/**
- * Handles the change in property of the TextField and enables/disables the search button accordingly.
- *
- * @param observable The observable value being watched.
- * @param oldValue   The old value before the change.
- * @param newValue   The new value after the change.
- */
-private void handleTestFielPropertyChange(ObservableValue observable, String oldValue, String newValue) {
-    if (!newValue.isEmpty()) {
-        btnSearch.setDisable(false);
-    } else {
-        btnSearch.setDisable(true);
+    private void handleTestFielPropertyChange(ObservableValue observable, String oldValue, String newValue) {
+        if (!newValue.isEmpty()) {
+            btnSearch.setDisable(false);
+        } else {
+            btnSearch.setDisable(true);
+        }
     }
-}
 
-/**
- * Handles the change in selection of a row in the table and updates the state of various buttons accordingly.
- *
- * @param observable The observable value being watched.
- * @param oldValue   The old value before the change.
- * @param newValue   The new value after the change.
- */
-private void handleSelectRowChange(ObservableValue observable, Object oldValue, Object newValue) {
-    if (newValue != null) {
-        btnDelete.setDisable(false);
-        cmmiDelete.setDisable(false);
-        btnShowTrips.setDisable(false);
-    } else {
-        btnDelete.setDisable(true);
-        btnShowTrips.setDisable(true);
-        cmmiDelete.setDisable(true);
+    private void handleSelectRowChange(ObservableValue observable, Object oldValue, Object newValue) {
+        if (newValue != null) {
+            btnDelete.setDisable(false);
+            cmmiDelete.setDisable(false);
+            btnShowTrips.setDisable(false);
+
+        } else {
+            btnDelete.setDisable(true);
+            btnShowTrips.setDisable(true);
+            cmmiDelete.setDisable(true);
+
+        }
     }
-}
 
-/**
- * Handles the action of deleting a customer.
- *
- * @param event The action event triggering the method.
- */
-public void handleDeleteAction(ActionEvent event) {
-    try {
-        Customer userToDelete = (Customer) tvCustomers.getSelectionModel().getSelectedItem();
-        mang.deleteCustomer(userToDelete.getMail());
-        customers.remove(userToDelete);
-        tvCustomers.getSelectionModel().clearSelection();
-        tvCustomers.refresh();
-    } catch (DeleteException e) {
-        this.showErrorAlert("Unable to Delete the selected User");
+    public void handleDeleteAction(ActionEvent event) {
+        try {
+            Customer userToDelete = (Customer) tvCustomers.getSelectionModel().getSelectedItem();
+            mang.deleteCustomer(userToDelete.getMail());
+            customers.remove(userToDelete);
+            tvCustomers.getSelectionModel().clearSelection();
+            tvCustomers.refresh();
+        } catch (DeleteException e) {
+            this.showErrorAlert("Unable to Delete the selected User");
+        }
     }
-}
 
-/**
- * Handles the action of creating a new customer.
- *
- * @param event The action event triggering the method.
- */
-public void handleNewAction(ActionEvent event) {
-    try {
-        Customer customer = new Customer();
-        // Initialization of customer properties
-        // ...
+    public void handleNewAction(ActionEvent event) {
+        Random mail = new Random();
 
-        mang.createCustomer(customer);
-        customers.add(customer);
-        tvCustomers.refresh();
-    } catch (CreateException ex) {
-        this.showErrorAlert("Unable create the new user");
+        try {
+            Customer customer = new Customer();
+            customer.setName(null);
+            customer.setPassword(null);
+            customer.setCreationDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            customer.setAddress(null);
+            customer.setPassword("example");
+            customer.setMail("example" + Math.abs(mail.nextInt()) + "@gmail.com");
+            customer.setPhone(null);
+            customer.setZip(null);
+            customer.setUserType(EnumUserType.CUSTOMER);
+
+            mang.createCustomer(customer);
+            customers.add(customer);
+            tvCustomers.refresh();
+
+        } catch (CreateException ex) {
+            this.showErrorAlert("Unable create the new user");
+        }
     }
-}
 
-/**
- * Handles the action of searching for a customer based on the entered mail in the TextField.
- *
- * @param event The action event triggering the method.
- */
-public void handleSearchAction(ActionEvent event) {
-    try {
-        customers = FXCollections.observableArrayList(mang.findCustomerByMail(tfMail.getText()));
-        tvCustomers.setItems(customers);
-        tvCustomers.refresh();
-    } catch (ReadException e) {
-        this.showErrorAlert("Unable to retrieve the users info");
+    public void handleSearchAction(ActionEvent event) {
+        try {
+            customers = FXCollections.observableArrayList(mang.findCustomerByMail(tfMail.getText()));
+            tvCustomers.setItems(customers);
+            tvCustomers.refresh();
+        } catch (ReadException e) {
+            this.showErrorAlert("Unable to retrieve the users info");
+        }
     }
-}
 
-/**
- * Provides a custom value factory for converting Customer's creation date to a LocalDate.
- *
- * @param factory The cell data features for the table column.
- * @return An observable value representing the LocalDate of the customer's creation date.
- */
-private ObservableValue<LocalDate> getCustomerToLocalDateCreationDateValueFactory(
-        CellDataFeatures<Customer, LocalDate> factory) {
-    return new SimpleObjectProperty<>(factory.getValue().getCreationDate()
-            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-}
+    private ObservableValue<LocalDate> getCustomerToLocalDateCreationDateValueFactory(
+            CellDataFeatures<Customer, LocalDate> factory) {
+        return new SimpleObjectProperty<>(factory.getValue().getCreationDate()
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+    }
 
-/**
- * Provides a callback for creating a DatePickerTableCell for a Date column in the table.
- *
- * @return A callback for creating DatePickerTableCells for Date columns.
- */
-private Callback<TableColumn<Customer, Date>, TableCell<Customer, Date>> getDatePickerCellFactory() {
-    return (TableColumn<Customer, Date> param) -> {
-        return new DatePickerTableCell();
-    };
-}
+    private Callback<TableColumn<Customer, Date>, TableCell<Customer, Date>> getDatePickerCellFactory() {
+        return (TableColumn<Customer, Date> param) -> {
+            return new DatePickerTableCell();
+        };
+    }
 
-/**
- * Handles the action of a feature that is still in development, displaying an alert.
- *
- * @param event The action event triggering the method.
- */
-private void handleStillDev(ActionEvent event) {
-    this.showErrorAlert("This feature is not supported yet");
-}
+    private void handleStillDev(ActionEvent event) {
+        this.showErrorAlert("This feature is not supported yet");
+    }
 
-/**
- * Validates a given field value against a specified pattern.
- *
- * @param value   The value to be validated.
- * @param pattern The regular expression pattern for validation.
- * @return True if the value is valid according to the pattern, false otherwise.
- */
-private boolean validateField(String value, String pattern) {
-    return !value.matches(pattern);
-}
-
+    private boolean validateField(String value, String pattern) {
+        return !value.matches(pattern);
+    }
 
 }
