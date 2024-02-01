@@ -213,10 +213,10 @@ public class TripController extends GenericController {
 	 * Date object to store previous end date value
      */
     private LocalDate oldEndDate;
-	/**
-	 * Private list of tripInfos to NOT show user cause alredy booked trips
-	 */
-	private List<TripInfo> tripInfosBooked;
+    /**
+     * Private list of tripInfos to NOT show user cause alredy booked trips
+     */
+    private List<TripInfo> tripInfosBooked;
 
     /**
      * Method to initialize the stage.
@@ -264,8 +264,8 @@ public class TripController extends GenericController {
             rbBoth.setToggleGroup(radioGroup);
             rbBoth.setVisible(false);
             lbStatus.setVisible(false);
-			// Set the radio button "Active" as selected by default
-			rbActive.setSelected(true);
+            // Set the radio button "Active" as selected by default
+            rbActive.setSelected(true);
             // Set the menu item cancel to invisible
             menuItemCancel.setVisible(false);
             // Set disable both menu items
@@ -283,7 +283,7 @@ public class TripController extends GenericController {
             // Event for menu item Help
             miHelp.setOnAction(this::menuItemHelpOnAction);
             // Event for menu item Exit
-            miExit.setOnAction(this::menuItemExitOnAction);
+            //miExit.setOnAction(this::menuItemExitOnAction);
             // Event for button Search
             btSearch.setOnAction(this::btSearchOnAction);
             // Event for button Purchase/Cancel
@@ -439,7 +439,7 @@ public class TripController extends GenericController {
      *
      * @param event AN action event.
      */
-    private void menuItemExitOnAction(ActionEvent event) {
+    /*private void menuItemExitOnAction(ActionEvent event) {
         // Display a confirmation message
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to log out?", ButtonType.YES,
                 ButtonType.NO);
@@ -455,8 +455,7 @@ public class TripController extends GenericController {
 				loginController.initStage(root);
             }
         });
-    }
-
+    }*/
     /**
      * Method to handle the action when the user selects an item in the combo
      * box
@@ -482,7 +481,7 @@ public class TripController extends GenericController {
             lbStatus.setVisible(true);
             rbActive.setVisible(true);
             rbInactive.setVisible(true);
-			rbActive.setSelected(true);
+            rbActive.setSelected(true);
             rbBoth.setVisible(true);
             lbTripType.setVisible(false);
             cbTripType.setVisible(false);
@@ -491,33 +490,38 @@ public class TripController extends GenericController {
             menuItemBook.setVisible(false);
         }
     }
-	/**
-	 * Method to obtain only not booked trips
-	 * @param trips List of trips to filter
-	 * @return List of trips not booked
-	 * @throws Exception 
-	 */
-	private List<Trip> obtainOnlyNotBookedTrips(List<Trip> trips) throws Exception {
-		try {
-			if (tripInfosBooked == null)
-				tripInfosBooked = tripInfoManager.findAllTripInfoByCustomer(customer);
-			List<Trip> tripsNotBooked = new ArrayList<Trip>();
-			for (Trip trip : trips) {
-				boolean booked = false;
-				for (TripInfo tripInfo : tripInfosBooked) {
-					if (tripInfo.getTrip().getId() == trip.getId()) {
-						booked = true;
-						break;
-					}
-				}
-				if (!booked)
-					tripsNotBooked.add(trip);
-			}
-			return tripsNotBooked;
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
-		}
-	}
+
+    /**
+     * Method to obtain only not booked trips
+     *
+     * @param trips List of trips to filter
+     * @return List of trips not booked
+     * @throws Exception
+     */
+    private List<Trip> obtainOnlyNotBookedTrips(List<Trip> trips) throws Exception {
+        try {
+            if (tripInfosBooked == null) {
+                tripInfosBooked = tripInfoManager.findAllTripInfoByCustomer(customer);
+            }
+            List<Trip> tripsNotBooked = new ArrayList<Trip>();
+            for (Trip trip : trips) {
+                boolean booked = false;
+                for (TripInfo tripInfo : tripInfosBooked) {
+                    if (tripInfo.getTrip().getId() == trip.getId()) {
+                        booked = true;
+                        break;
+                    }
+                }
+                if (!booked) {
+                    tripsNotBooked.add(trip);
+                }
+            }
+            return tripsNotBooked;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
     /**
      * Method to handle the action when the user clicks on the Search button
      *
@@ -535,7 +539,7 @@ public class TripController extends GenericController {
                 } else {
                     trips = tripManager.findTripsByTripType(getEnumTripType(cbTripType.getSelectionModel().getSelectedIndex()));
                 }
-				trips = obtainOnlyNotBookedTrips(trips);
+                trips = obtainOnlyNotBookedTrips(trips);
                 if (trips == null || trips.isEmpty()) {
                     throw new Exception("There aren't any trips to be shown");
                 }
@@ -570,10 +574,11 @@ public class TripController extends GenericController {
         } catch (Exception e) {
             // Logger
             LOGGER.severe("Exception. " + e);
-			if (e.getMessage().isEmpty())
-            	this.showErrorAlert("Error while doing search");
-			else
-				this.showErrorAlert(e.getMessage());
+            if (e.getMessage().isEmpty()) {
+                this.showErrorAlert("Error while doing search");
+            } else {
+                this.showErrorAlert(e.getMessage());
+            }
         }
     }
 
@@ -674,27 +679,32 @@ public class TripController extends GenericController {
      */
     private void btPrint(ActionEvent event) {
         try {
-			//Convert the trip list from table to tripInfo list
-			List<TripInfo> tripInfos = new ArrayList<TripInfo>();
-			for (Trip trip : tableViewTrips.getItems()) {
-				tripInfos.add(trip.getTripInfo().get(0));
-				tripInfos.get(tripInfos.size() - 1).setTrip(trip);
-			}
-            // Load the Jasper report from its path
-            JasperReport jasperReport = JasperCompileManager.compileReport("/view/trip/TripReport.jrxml");
-            // Create a map to pass any parameters to the report
-            Map<String, Object> parameters = new HashMap<>();
-            // Convert the data to JRBeanCollectionDataSource as JasperReport accepts data in this format
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(tripInfos);
-            // Fill the report with data
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-            jasperViewer.setVisible(true);
-        } catch (JRException ex) {
+            //Convert the trip list from table to tripInfo list
+            List<TripInfo> tripInfos = new ArrayList<TripInfo>();
+            for (Trip trip : tableViewTrips.getItems()) {
+                TripInfo tripInfo = new TripInfo();
+                if (trip.getTripInfo() != null) 
+                    tripInfo = trip.getTripInfo().get(0);
+                    tripInfo.setTrip(trip);
+                    tripInfos.add(tripInfo);
+                }
+                // Load the Jasper report from its path
+                JasperReport jasperReport = JasperCompileManager.compileReport("src/view/trip/TripReport.jrxml");
+                // Create a map to pass any parameters to the report
+                Map<String, Object> parameters = new HashMap<>();
+                // Convert the data to JRBeanCollectionDataSource as JasperReport accepts data in this format
+                JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(tripInfos);
+                // Fill the report with data
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+            }catch (JRException ex) {
 			showErrorAlert("Error while printing the report: " + ex.getMessage());
             Logger.getLogger(TripController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        }
+
+    
 
     private ObservableValue<LocalDate> getTripInfoToLocalDateInitialDateValueFactory(
             CellDataFeatures<Trip, LocalDate> factory) {
