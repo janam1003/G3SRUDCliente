@@ -273,7 +273,7 @@ public class SignUpController extends GenericController {
 
         } catch (Exception e) {
 
-            LOGGER.severe("Exception: " + e.getMessage());
+            LOGGER.severe("Exception creating user: " + e.getMessage());
             this.showErrorAlert(e.getMessage());
         }
     }

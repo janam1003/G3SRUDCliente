@@ -297,7 +297,8 @@ public class LoginController extends GenericController {
 
             // Logger
             LOGGER.log(Level.SEVERE, "Exception. {0}", e.getMessage());
-
+            
+            showErrorAlert("Unexpected error: "+e.getMessage());
         }
     }
 
