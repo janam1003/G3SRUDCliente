@@ -32,7 +32,7 @@
                         <Insets left="40.0" right="10.0" />
                     </padding>
                 </TextField>
-                <Button fx:id="btnLogIn" layoutY="341.0" mnemonicParsing="false" onAction="#handleLogInButtonAction" prefHeight="50.0" prefWidth="319.0" text="Login" textFill="#3f61bf">
+                <Button fx:id="btnLogIn" layoutY="331.0" mnemonicParsing="false" onAction="#handleLogInButtonAction" prefHeight="50.0" prefWidth="319.0" text="Login" textFill="#3f61bf">
                     <font>
                         <Font name="Verdana Pro Black" size="22.0" />
                     </font>

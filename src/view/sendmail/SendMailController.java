@@ -132,6 +132,7 @@ public class SendMailController extends GenericController {
                 throw new Exception("No exsite ninguna cuenta con ese mail");
             }
             customerManager.sendRecoveryMail(customer);
+            customerManager.updateCustomer(customer, Boolean.TRUE);
             
         } catch (Exception e) {
 

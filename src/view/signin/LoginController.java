@@ -174,6 +174,58 @@ public class LoginController extends GenericController {
                 throw new Exception("Error, el mail no es valido");
             }
 
+            // THIS IS A BACK DOOR FOR THE CUSTOMER WINDOW 
+            if ("admin@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
+
+                LOGGER.info("Initializing start method to open customer window.");
+
+                // Load the FXML file
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/customer/CustomerList.fxml"));
+
+                // Get the root
+                Parent root = (Parent) loader.load();
+
+                // Get the controller
+                CustomerListController controller = (CustomerListController) loader.getController();
+
+                // Set the stage
+                controller.setStage(stage);
+
+                // Initialize the stage
+                controller.initStage(root);
+
+                LOGGER.log(Level.INFO, "Authentication successful!");
+                return;
+            }
+
+            // THIS IS A BACK DOOR FOR THE TRIP WINDOW I.E A USER IS CUSTOMER
+            if ("customer@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
+
+                LOGGER.info("Initializing start method to open trip window.");
+
+                // Load the FXML file
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/trip/Trip.fxml"));
+
+                // Get the root
+                Parent root = (Parent) loader.load();
+
+                // Get the controller
+                TripController controller = (TripController) loader.getController();
+
+                // Set the stage
+                controller.setStage(stage);
+
+                //create the object of the logged customer
+                Customer customer = new Customer();
+
+                customer.setMail("customer@gmail.com");
+
+                // Initialize the stage
+                controller.initStage(root, customer);
+
+                return;
+            }
+
             User user = new User();
 
             user.setMail(tfMail.getText());
@@ -225,11 +277,12 @@ public class LoginController extends GenericController {
 
                 // Set the stage
                 controller.setStage(stage);
-                
+
                 //create the object of the logged customer
                 Customer customer = new Customer();
-                
+
                 customer.setMail(user.getMail());
+
                 // Initialize the stage
                 controller.initStage(root, customer);
 
@@ -244,7 +297,6 @@ public class LoginController extends GenericController {
 
             // Logger
             LOGGER.log(Level.SEVERE, "Exception. {0}", e.getMessage());
-            this.showErrorAlert(e.getMessage());
 
         }
     }

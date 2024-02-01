@@ -1,6 +1,13 @@
 package view.signup;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import entities.Customer;
+import entities.EnumUserType;
+import factories.CustomerManagerFactory;
+import interfaces.CustomerManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.regex.Pattern;
 import javax.security.auth.login.CredentialException;
 import javafx.event.ActionEvent;
@@ -198,6 +205,7 @@ public class SignUpController extends GenericController {
     @FXML
     private void handleSignedUpButtonAction(ActionEvent event) {
 
+        CustomerManager mang = CustomerManagerFactory.getCustomerManager();
         boolean errorExists = false;
 
         try {
@@ -237,6 +245,28 @@ public class SignUpController extends GenericController {
                     errorExists = true;
                 } else {
                     lblConfirmPassword.setVisible(false);
+                }
+
+                //In case that there is an error we throw the CredentialException
+                if (errorExists) {
+                    throw new CredentialException("Revise the values");
+                    //If there is no error it will start creating a user  
+                } else {
+
+                    Customer user = new Customer();
+                    user.setName(tfNameSurname.getText());
+                    user.setMail(tfEmail.getText());
+                    user.setPhone(tfPhone.getText());
+                    user.setAddress(tfAddress.getText());
+                    user.setZip(tfZip.getText());
+                    user.setPassword(pfPasswordSU.getText());
+                    user.setCreationDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    user.setUserType(EnumUserType.CUSTOMER);
+                    mang.createCustomer(user);
+                    //Show a confirmation message showing that the user hs been properli created
+                    showUserCreatedAlert();
+                    // We close the stage
+                    stage.close();
                 }
 
             }

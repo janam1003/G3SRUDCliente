@@ -1,9 +1,5 @@
 package application;
 
-import entities.Customer;
-import entities.EnumUserType;
-import factories.CustomerManagerFactory;
-import interfaces.CustomerManager;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -44,15 +40,6 @@ public class G3EntryPoint extends Application {
 
         // Set the stage
         controller.setStage(stage);
-    
-        /*
-        Customer customer = new Customer();
-        customer.setMail("test3@gmail.com");
-        customer.setPassword("test");
-        customer.setAddress("aggdfgda");
-        customer.setUserType(EnumUserType.CUSTOMER);
-        CustomerManager customerManager = CustomerManagerFactory.getCustomerManager();
-        customerManager.createCustomer(customer);*/
 
         // Initialize the stage
         controller.initStage(root);
