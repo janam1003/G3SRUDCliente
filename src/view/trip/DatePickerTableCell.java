@@ -12,17 +12,27 @@ import entities.Trip;
 import entities.TripInfo;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
-
+/**
+ * Class that extends TableCell to create a DatePicker in a TableView
+ * @author Inigo
+ */
 public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
-
+	/**
+	 * DatePicker to be created
+	 */
     private DatePicker datePicker;
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static String oldValue;
+    /**
+	 * String to save the old value
+	 */
+	private static String oldValue;
 
     public DatePickerTableCell() {
 
     }
-
+	/**
+	 * Method to start the edit
+	 */
     @Override
     public void startEdit() {
         if (!isEmpty()) {
@@ -33,7 +43,9 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
             setGraphic(datePicker);
         }
     }
-
+	/**
+	 * Method called when cancel the edit
+	 */
     @Override
     public void cancelEdit() {
         super.cancelEdit();
@@ -42,7 +54,11 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
         setGraphic(null);
         setText(oldValue);
     }
-
+	/**
+	 * Method to update the item
+	 * @param item LocalDate to be updated
+	 * @param empty boolean to check if the item is empty
+	 */
     @Override
     public void updateItem(LocalDate item, boolean empty) {
         super.updateItem(item, empty);
@@ -65,7 +81,9 @@ public class DatePickerTableCell extends TableCell<Trip, LocalDate> {
             }
         }
     }
-
+	/**
+	 * Method to create a DatePicker
+	 */
     private void createDatePicker() {
         datePicker = new DatePicker();
         datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);

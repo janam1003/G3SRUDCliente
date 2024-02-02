@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package restful;
 
 import entities.Customer;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -26,10 +22,11 @@ import javax.ws.rs.core.GenericType;
  */
 public class CustomerRESTClient {
 
-    private WebTarget webTarget;
-    private Client client;
-    //Referencia al RESTFUL ¡¡¡¡meter en properties!!!
-    private static final String BASE_URI = "http://localhost:8080/dani/webresources";
+    private final WebTarget webTarget;
+    private final Client client;
+
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public CustomerRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -114,8 +111,12 @@ public class CustomerRESTClient {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    public void sendRecoveryEmail(Object requestEntity) throws WebApplicationException {
+        webTarget.path("sendRecoveryEmail").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
     public void close() {
         client.close();
     }
-    
+
 }

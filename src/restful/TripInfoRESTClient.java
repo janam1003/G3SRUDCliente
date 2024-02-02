@@ -7,6 +7,7 @@ package restful;
 
 import entities.Trip;
 import entities.TripInfo;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,7 +29,8 @@ public class TripInfoRESTClient {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/dani/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public TripInfoRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -80,5 +82,5 @@ public class TripInfoRESTClient {
     public void close() {
         client.close();
     }
-    
+
 }

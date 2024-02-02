@@ -91,14 +91,14 @@ public class UserManagerImplementation implements UserManager {
      */
     @Override
     public User signIn(User user) throws ReadException {
-        try {
-            user.setPassword(encryptWithPublicKey(user.getPassword()));
-            user = client.signIn_XML(user, User.class);
-            if (user == null) {
-                return null;
-            } else {
-                return new User(user.getMail(), user.getPassword(), user.getCreationDate(), user.getUserType());
-            }
+     try {
+           user.setPassword(encryptWithPublicKey(user.getPassword())); 
+           user = client.signIn_XML(user, User.class);
+           
+           if(user==null){
+               return null;
+           }
+           return new User(user.getMail(),user.getPassword(),user.getCreationDate(),user.getUserType());
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.log(Level.SEVERE, "Can't get the user", e.getMessage());

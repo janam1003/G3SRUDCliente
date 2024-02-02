@@ -1,5 +1,8 @@
 package view.sendmail;
 
+import entities.Customer;
+import factories.CustomerManagerFactory;
+import interfaces.CustomerManager;
 import view.generic.GenericController;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -38,7 +41,7 @@ public class SendMailController extends GenericController {
      * @param root
      */
     public void initStage(Parent root) {
-
+        
         try {
 
             // Logger
@@ -73,24 +76,24 @@ public class SendMailController extends GenericController {
 
             // We set the default button
             btnSend.setDefaultButton(true);
-
+            
             this.btnCancel.setCancelButton(true);
 
             // ToolTips
             btnSend.setTooltip(new Tooltip("Send"));
-
+            
             btnCancel.setTooltip(new Tooltip("Cancel"));
 
             // Event Handlers
             this.btnSend.setOnAction(this::handleSendButtonAction);
-
+            
             this.btnCancel.setOnAction(this::handleOnActionExit);
-
+            
         } catch (Exception e) {
 
             // Logger
             LOGGER.log(Level.SEVERE, "Unable to Initialize SendMail window.", e.getMessage());
-
+            
         }
     }
 
@@ -100,7 +103,7 @@ public class SendMailController extends GenericController {
      */
     @FXML
     private void handleSendButtonAction(ActionEvent event) {
-
+        
         try {
 
             // Logger
@@ -121,31 +124,22 @@ public class SendMailController extends GenericController {
             if (!pattern.matcher(tfEmail.getText()).matches()) {
                 throw new Exception("Error, el mail no es valido");
             }
-
+            
+            CustomerManager customerManager = CustomerManagerFactory.getCustomerManager();
+            Customer customer = null;
+            customer = customerManager.findCustomerByMail(tfEmail.getText());
+            if (customer == null) {
+                throw new Exception("No exsite ninguna cuenta con ese mail");
+            }
+            customerManager.sendRecoveryMail(customer);
+            customerManager.updateCustomer(customer, Boolean.TRUE);
+            
         } catch (Exception e) {
 
             // Logger
             LOGGER.log(Level.SEVERE, "Exception. {0}", e.getMessage());
             this.showErrorAlert(e.getMessage());
-
+            
         }
-
-        /**
-         * get all the list of the customer email
-         *
-         * Patient patient = null; try { patientList =
-         * pInterface.findAllPatients_XML(new GenericType<List<Patient>>() { });
-         * for (Patient newPatient : patientList) { if
-         * (newPatient.getEmail().equals(this.tfEmailAddress.getText())) {
-         * patient = newPatient; } } pInterface.sendRecoveryEmail_XML(patient);
-         *
-         * new Alert(Alert.AlertType.INFORMATION, "New password sent to email",
-         * ButtonType.OK).showAndWait(); stage.close();
-         *
-         * } catch (Exception ex) {
-         * Logger.getLogger(RememberPasswordController.class.getName()).log(Level.SEVERE,
-         * null, ex); new Alert(Alert.AlertType.ERROR, ex.getMessage(),
-         * ButtonType.OK).showAndWait(); }
-         */
     }
 }
