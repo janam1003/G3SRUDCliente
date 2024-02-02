@@ -118,6 +118,7 @@ public class CustomerListController extends GenericController {
      */
     public void initStage(Parent root) {
 
+        LOGGER.info("Initializing the view");
         try {
             // Create a new Scene with the specified root node
             Scene scene = new Scene(root);
@@ -185,10 +186,12 @@ public class CustomerListController extends GenericController {
                     // Handle UpdateException by reverting the changes and showing an error alert
                     customer.setName(t.getOldValue());
                     this.showErrorAlert("Unable to modify the name");
+                    LOGGER.severe("Unable to modify the name");
                 } catch (CredentialException e) {
                     // Handle CredentialException by reverting the changes and showing an error alert
                     customer.setName(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } finally {
                     // Refresh the TableView to reflect any changes
                     tvCustomers.refresh();
@@ -231,14 +234,17 @@ public class CustomerListController extends GenericController {
                     // Handle update exception
                     customer.setMail(t.getOldValue());
                     this.showErrorAlert("Unable to modify the mail");
+                    LOGGER.severe("Unable to modify the name");
                 } catch (CredentialException e) {
                     // Handle credential exception
                     customer.setMail(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } catch (DeleteException ex) {
                     // Handle delete exception
                     customer.setMail(t.getOldValue());
                     this.showErrorAlert("Error connecting to the server");
+                    LOGGER.severe("Error connecting to the server");
                 } catch (ReadException ex) {
                     // Handle read exception
                     Logger.getLogger(CustomerListController.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,10 +285,12 @@ public class CustomerListController extends GenericController {
                     // Handle exception when unable to update the customer
                     customer.setAddress(t.getOldValue());
                     this.showErrorAlert("Unable to modify the Address");
+                    LOGGER.severe("Unable to modify the Address");
                 } catch (CredentialException e) {
                     // Handle exception when the new address is invalid
                     customer.setAddress(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } finally {
                     // Refresh the TableView to reflect the changes
                     tvCustomers.refresh();
@@ -320,10 +328,12 @@ public class CustomerListController extends GenericController {
                     // Handle update exception
                     customer.setZip(t.getOldValue());
                     this.showErrorAlert("Unable to modify the Zip");
+                    LOGGER.severe("Unable to modify the Zip");
                 } catch (CredentialException e) {
                     // Handle credential exception
                     customer.setZip(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } finally {
                     // Refresh the table view
                     tvCustomers.refresh();
@@ -365,10 +375,12 @@ public class CustomerListController extends GenericController {
                     // Handle exception if update fails, revert to the old phone value
                     customer.setPhone(t.getOldValue());
                     this.showErrorAlert("Unable to modify the Phone");
+                    LOGGER.severe("Unable to modify the Phone");
                 } catch (CredentialException e) {
                     // Handle exception if validation fails, revert to the old phone value
                     customer.setPhone(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } finally {
                     // Refresh the TableView to reflect the changes
                     tvCustomers.refresh();
@@ -412,10 +424,12 @@ public class CustomerListController extends GenericController {
                     // Handle update exception
                     customer.setCreationDate(t.getOldValue());
                     this.showErrorAlert("Unable to modify the Phone");
+                    LOGGER.severe("Unable to modify the Phone");
                 } catch (CredentialException e) {
                     // Handle credential exception
                     customer.setCreationDate(t.getOldValue());
                     this.showErrorAlert(e.getMessage());
+                    LOGGER.severe(e.getMessage());
                 } finally {
                     // Refresh the TableView
                     tvCustomers.refresh();
@@ -498,6 +512,7 @@ public class CustomerListController extends GenericController {
             }
         } catch (ReadException e) {
             this.showErrorAlert("Error getting the stored customers");
+            LOGGER.severe("Error getting the stored customers");
         }
     }
 
@@ -559,6 +574,7 @@ public class CustomerListController extends GenericController {
         } catch (DeleteException e) {
             // Handle the exception by displaying an error alert
             this.showErrorAlert("Unable to Delete the selected User");
+            LOGGER.severe("Unable to Delete the selected User");
         }
     }
 
@@ -593,6 +609,7 @@ public class CustomerListController extends GenericController {
         } catch (CreateException ex) {
             // Handle the exception by displaying an error alert
             this.showErrorAlert("Unable create the new user");
+            LOGGER.severe("Unable create the new user");
         }
     }
 
@@ -610,6 +627,7 @@ public class CustomerListController extends GenericController {
         } catch (ReadException e) {
             // Handle the exception by displaying an error alert
             this.showErrorAlert("Unable to retrieve the users info");
+            LOGGER.severe("Unable to retrieve the new user");
         }
     }
 
@@ -684,7 +702,7 @@ public class CustomerListController extends GenericController {
             jasperViewer.setVisible(true);
         } catch (Exception e) {
             // Handle the exception by displaying an error alert
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            this.showErrorAlert("Error");
         }
     }
 

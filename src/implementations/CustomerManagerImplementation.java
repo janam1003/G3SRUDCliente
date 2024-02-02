@@ -30,7 +30,7 @@ public class CustomerManagerImplementation implements CustomerManager {
     /**
      * Logger object used to log messages for the application.
      */
-    protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
+    protected static final Logger LOGGER = Logger.getLogger("CustomerManagerImplementation");
 
     private CustomerRESTClient client = new CustomerRESTClient();
 
