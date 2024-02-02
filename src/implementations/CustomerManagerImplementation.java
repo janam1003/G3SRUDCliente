@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package implementations;
 
 import static encryption.EncryptionImplementation.encryptWithPublicKey;
@@ -15,6 +10,7 @@ import interfaces.CustomerManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericType;
 import restful.CustomerRESTClient;
 
@@ -32,7 +28,7 @@ public class CustomerManagerImplementation implements CustomerManager {
      */
     protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
 
-    private CustomerRESTClient client = new CustomerRESTClient();
+    private final CustomerRESTClient client = new CustomerRESTClient();
 
     /**
      * Retrieves a list of all customers from the REST service.
@@ -181,20 +177,39 @@ public void updateCustomer(Customer customer, Boolean encrypted) throws UpdateEx
     }
 }
 
+
 /**
  * Deletes a customer with the specified ID from the REST service.
  *
  * @param customerId The ID of the customer to be deleted.
  * @throws DeleteException If there is an error while deleting the customer.
  */
-@Override
-public void deleteCustomer(String customerId) throws DeleteException {
-    try {
-        LOGGER.info("Deleting the customer");
-        client.deleteCustomer(customerId);
-    } catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Can't delete the customer", e.getMessage());
-        throw new DeleteException(e.getMessage());
+    @Override
+    public void deleteCustomer(String customerId) throws DeleteException {
+        try {
+            LOGGER.info("Deleting the customer");
+            client.deleteCustomer(customerId);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Can't delete the customer", e.getMessage());
+            throw new DeleteException(e.getMessage());
+        }
     }
-}
+
+    /**
+     * Sends a recovery email to the customer.
+     *
+     * @param customer The customer to whom the recovery email should be sent.
+     * @throws ReadException If there is any issue during the process.
+     */
+    @Override
+    public void sendRecoveryMail(Customer customer) throws ReadException {
+        try {
+            LOGGER.info("Sending an email to the customer for recovery.");
+            client.sendRecoveryEmail(customer);
+            LOGGER.info("Recovery email sent successfully.");
+        } catch (WebApplicationException e) {
+            LOGGER.log(Level.SEVERE, "Error sending a recovery email to the customer.", e.getMessage());
+            throw new ReadException("Error sending recovery email: " + e.getMessage());
+        }
+    }
 }

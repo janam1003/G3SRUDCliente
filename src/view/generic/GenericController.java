@@ -1,6 +1,5 @@
 package view.generic;
 
-
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,17 +75,18 @@ public class GenericController {
         alert.showAndWait();
     }
 
-	/**
-	 * Shows an infomation alert dialog.
-	 * @param infoMsg The information message to be shown.
-	 */
-	protected void showInfoAlert(String infoMsg) {
-		//Shows info dialog.
-		Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
-		alert.getDialogPane();
-		alert.showAndWait();
-	}
-	
+    /**
+     * Shows an infomation alert dialog.
+     *
+     * @param infoMsg The information message to be shown.
+     */
+    protected void showInfoAlert(String infoMsg) {
+        //Shows info dialog.
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
+        alert.getDialogPane();
+        alert.showAndWait();
+    }
+
     /**
      * Handles the action when the user attempts to exit the application or
      * view.
@@ -128,7 +128,7 @@ public class GenericController {
             LOGGER.log(Level.SEVERE, errorMsg);
         }
     }
-    
+
     /**
      * Shows the content of a password field replacing it with a text field.
      *

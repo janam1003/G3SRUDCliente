@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaces;
 
 import entities.Customer;
@@ -41,24 +36,27 @@ public interface CustomerManager {
      * @throws ReadException If there is any Exception during processing.
      */
     public List<Customer> findCustomersWithTrips() throws ReadException;
+
     /**
      * Retrieves all customers ordered by they day they where created.
      *
-     * @return A list of customers with customers ordered by they day they where created.
+     * @return A list of customers with customers ordered by they day they where
+     * created.
      * @throws ReadException If there is any Exception during processing.
      */
-    
+
     public List<Customer> findAllOrderByCreationDate() throws ReadException;
+
     /**
      * Retrieves all customers with trips longer than one week.
      *
      * @return A list of customers trips longer than one week.
      * @throws ReadException If there is any Exception during processing.
      */
-    
-    
+
     public List<Customer> findOneWeekTrips() throws ReadException;
-        /**
+
+    /**
      * Creates a new customer.
      *
      * @param customer The customer to be created.
@@ -81,4 +79,12 @@ public interface CustomerManager {
      * @throws DeleteException If there is any Exception during processing.
      */
     public void deleteCustomer(String customerId) throws DeleteException;
+
+    /**
+     * Method to send an user a new password to recover an mail
+     *
+     * @param user to send an user a new password
+     * @throws ReadException If there is any Exception during processing.
+     */
+    public void sendRecoveryMail(Customer customer) throws ReadException;
 }

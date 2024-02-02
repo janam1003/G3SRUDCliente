@@ -7,9 +7,11 @@ import exception.LogicException;
 
 /**
  * Logic interface encapsulating business methods for trip management.
+ *
  * @author Iñigo
  */
 public interface TripManager {
+
     /**
      * Finds a {@link Trip} by its id.
      *
@@ -60,5 +62,5 @@ public interface TripManager {
      * @return A List of {@link Trip} objects.
      * @throws LogicException If there is any Exception during processing.
      */
-    public List<Trip> findTripsByTripType(EnumTripType tripType) throws LogicException;   
+    public List<Trip> findTripsByTripType(EnumTripType tripType) throws LogicException;
 }

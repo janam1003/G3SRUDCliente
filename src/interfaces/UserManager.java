@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaces;
 
 import entities.User;
@@ -16,8 +11,7 @@ import exception.UpdateException;
  * @author danid
  */
 public interface UserManager {
-    
-    
+
     /**
      * Retrieves a customer by their email address.
      *
@@ -26,7 +20,8 @@ public interface UserManager {
      * @throws ReadException If there is any Exception during processing.
      */
     public User signIn(User user) throws ReadException;
-        /**
+
+    /**
      * Retrieves a user by their email address.
      *
      * @param mail The email address of the user.
@@ -34,7 +29,8 @@ public interface UserManager {
      * @throws ReadException If there is any Exception during processing.
      */
     public User findUserByMail(String mail) throws ReadException;
-        /**
+
+    /**
      * Creates a new user.
      *
      * @param user The user to be created.
