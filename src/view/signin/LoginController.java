@@ -33,361 +33,373 @@ import view.trip.TripController;
  */
 public class LoginController extends GenericController {
 
-    /**
-     * Text field for the user's mail.
-     */
-    @FXML
-    private TextField tfMail;
+	/**
+	 * Text field for the user's mail.
+	 */
+	@FXML
+	private TextField tfMail;
+
+	/**
+	 * Button to log in.
+	 */
+	@FXML
+	private Button btnLogIn;
+
+	/**
+	 * Button to Eye.
+	 */
+	@FXML
+	private Button btnEye;
+
+	/**
+	 * Hyperlink to sign up.
+	 */
+	@FXML
+	private Hyperlink hlSignUp;
+
+	/**
+	 * Hyperlink to sign up.
+	 */
+	@FXML
+	private Hyperlink hlResetPassword;
+
+	/**
+	 * Text field for the user's password.
+	 */
+	@FXML
+	private PasswordField pfPassword;
+
+	/**
+	 * Icon for the button to show the password.
+	 */
+	@FXML
+	private FontAwesomeIcon btEye;
+
+	/**
+	 * Text field to show the password.
+	 */
+	@FXML
+	private TextField tfPasswordReveal;
+	/**
+	 * Loader for the trip window.
+	 */
+	private FXMLLoader loaderTrip;
+	/**
+	 * Loader for the admin window.
+	 */
+	private FXMLLoader loaderAdmin;
+
+	/**
+	 * Method to initialize the stage.
+	 *
+	 * @param root FXML document graph.
+	 */
+	public void initStage(Parent root) {
+
+		try {
+
+			// Logger
+			LOGGER.info("Initializing Login stage.");
+
+			// We create a new scene
+			Scene scene = new Scene(root);
+
+			// We set the scene not resizable
+			stage.setResizable(false);
+
+			// We set the title Login
+			stage.setTitle("Login");
+
+			// We set the window icon
+			stage.getIcons().add(new Image("/Resources/logo.png"));
+
+			// We set the scene
+			stage.setScene(scene);
 
-    /**
-     * Button to log in.
-     */
-    @FXML
-    private Button btnLogIn;
+			// We set the default button
+			btnLogIn.setDefaultButton(true);
 
-    /**
-     * Button to Eye.
-     */
-    @FXML
-    private Button btnEye;
+			// We set the cancel button
+			tfPasswordReveal.setVisible(false);
 
-    /**
-     * Hyperlink to sign up.
-     */
-    @FXML
-    private Hyperlink hlSignUp;
+			// Define the action when the x for exit on the window is clicked
+			stage.setOnCloseRequest(this::handleOnActionExit);
 
-    /**
-     * Hyperlink to sign up.
-     */
-    @FXML
-    private Hyperlink hlResetPassword;
-
-    /**
-     * Text field for the user's password.
-     */
-    @FXML
-    private PasswordField pfPassword;
+			// Event Handlers
+			this.hlSignUp.setOnAction(this::handleSignUpHyperlinkAction);
 
-    /**
-     * Icon for the button to show the password.
-     */
-    @FXML
-    private FontAwesomeIcon btEye;
-
-    /**
-     * Text field to show the password.
-     */
-    @FXML
-    private TextField tfPasswordReveal;
+			// Event Handlers
+			this.hlResetPassword.setOnAction(this::handleResetPasswordHyperlinkAction);
 
-    /**
-     * Method to initialize the stage.
-     *
-     * @param root FXML document graph.
-     */
-    public void initStage(Parent root) {
+			this.btnLogIn.setOnAction(this::handleLogInButtonAction);
 
-        try {
+			this.btnEye.setOnAction(this::handleEyeButtonAction);
 
-            // Logger
-            LOGGER.info("Initializing Login stage.");
+			// Load the FXML file for the trip window
+			loaderTrip = new FXMLLoader(getClass().getResource("/view/trip/Trip.fxml"));
+			// Load the FXML file for the Admin window
+			loaderAdmin = new FXMLLoader(getClass().getResource("/view/customer/CustomerList.fxml"));
 
-            // We create a new scene
-            Scene scene = new Scene(root);
+			// We show the stage
+			stage.show();
 
-            // We set the scene not resizable
-            stage.setResizable(false);
+		} catch (Exception e) {
 
-            // We set the title Login
-            stage.setTitle("Login");
+			// Logger
+			LOGGER.log(Level.SEVERE, "Unable to Initialize Login window: {0}", e.getMessage());
 
-            // We set the window icon
-            stage.getIcons().add(new Image("/Resources/logo.png"));
+			this.showErrorAlert(e.getMessage());
 
-            // We set the scene
-            stage.setScene(scene);
+		}
+	}
 
-            // We set the default button
-            btnLogIn.setDefaultButton(true);
+	/**
+	 * Method to handle the LogIn button action.
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void handleLogInButtonAction(ActionEvent event) {
 
-            // We set the cancel button
-            tfPasswordReveal.setVisible(false);
+		try {
 
-            // Define the action when the x for exit on the window is clicked
-            stage.setOnCloseRequest(this::handleOnActionExit);
+			// Logger
+			LOGGER.info("Initializing login button action.");
 
-            // Event Handlers
-            this.hlSignUp.setOnAction(this::handleSignUpHyperlinkAction);
+			// If the password is revealed, we get it text to set it into password field
+			if (tfPasswordReveal.isVisible()) {
+				pfPassword.setText(tfPasswordReveal.getText());
+			}
 
-            // Event Handlers
-            this.hlResetPassword.setOnAction(this::handleResetPasswordHyperlinkAction);
+			// If the mail or the password are empty, we throw an exception
+			if (tfMail.getText().trim().isEmpty() || pfPassword.getText().isEmpty()) {
+				throw new Exception("Error, rellena todos los campos");
+			}
 
-            this.btnLogIn.setOnAction(this::handleLogInButtonAction);
+			// If mail or/and password has more chars tham MAX_LENGTH we throw an exception
+			if (tfMail.getText().length() > this.MAX_LENGTH || pfPassword.getText().length() > this.MAX_LENGTH) {
+				showErrorAlert("La longitud máxima del campo es de 255 caracteres");
+			}
 
-            this.btnEye.setOnAction(this::handleEyeButtonAction);
+			// We check if the mail pattern is valid
+			Pattern pattern = Pattern.compile(mailPattern);
+			if (!pattern.matcher(tfMail.getText()).matches()) {
+				throw new Exception("Error, el mail no es valido");
+			}
 
-            // We show the stage
-            stage.show();
+			// THIS IS A BACK DOOR FOR THE CUSTOMER WINDOW
+			if ("admin@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
 
-        } catch (Exception e) {
+				LOGGER.info("Initializing start method to open customer window.");
 
-            // Logger
-            LOGGER.log(Level.SEVERE, "Unable to Initialize Login window: {0}", e.getMessage());
+				// Get the root
+				Parent root = (Parent) loaderAdmin.load();
 
-            this.showErrorAlert(e.getMessage());
+				// Get the controller
+				CustomerListController controller = (CustomerListController) loaderAdmin.getController();
 
-        }
-    }
+				// Set the stage
+				controller.setStage(stage);
 
-    /**
-     * Method to handle the LogIn button action.
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void handleLogInButtonAction(ActionEvent event) {
+				// Initialize the stage
+				controller.initStage(root);
 
-        try {
+				// Close the login window
+				stage.close();
 
-            // Logger
-            LOGGER.info("Initializing login button action.");
+				return;
+			}
 
-            // If the password is revealed, we get it text to set it into password field
-            if (tfPasswordReveal.isVisible()) {
-                pfPassword.setText(tfPasswordReveal.getText());
-            }
+			// THIS IS A BACK DOOR FOR THE TRIP WINDOW I.E A USER IS CUSTOMER
+			if ("customer@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
 
-            // If the mail or the password are empty, we throw an exception
-            if (tfMail.getText().trim().isEmpty() || pfPassword.getText().isEmpty()) {
-                throw new Exception("Error, rellena todos los campos");
-            }
+				LOGGER.info("Initializing start method to open trip window.");
 
-            // If mail or/and password has more chars tham MAX_LENGTH we throw an exception
-            if (tfMail.getText().length() > this.MAX_LENGTH || pfPassword.getText().length() > this.MAX_LENGTH) {
-                showErrorAlert("La longitud máxima del campo es de 255 caracteres");
-            }
+				// Get the root
+				Parent root = (Parent) loaderTrip.load();
 
-            // We check if the mail pattern is valid
-            Pattern pattern = Pattern.compile(mailPattern);
-            if (!pattern.matcher(tfMail.getText()).matches()) {
-                throw new Exception("Error, el mail no es valido");
-            }
+				// Get the controller
+				TripController controller = (TripController) loaderTrip.getController();
 
-            // THIS IS A BACK DOOR FOR THE CUSTOMER WINDOW 
-            if ("admin@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
+				// Set the stage
+				controller.setStage(stage);
 
-                LOGGER.info("Initializing start method to open customer window.");
+				// create the object of the logged customer
+				Customer customer = new Customer();
 
-                // Load the FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/customer/CustomerList.fxml"));
+				customer.setMail("customer@gmail.com");
 
-                // Get the root
-                Parent root = (Parent) loader.load();
+				// Initialize the stage
+				controller.initStage(root, customer);
 
-                // Get the controller
-                CustomerListController controller = (CustomerListController) loader.getController();
+				// Close the login window
+				stage.close();
 
-                // Set the stage
-                controller.setStage(stage);
+				return;
+			}
 
-                // Initialize the stage
-                controller.initStage(root);
+			User user = new User();
 
-                LOGGER.log(Level.INFO, "Authentication successful!");
-                return;
-            }
+			user.setMail(tfMail.getText());
 
-            // THIS IS A BACK DOOR FOR THE TRIP WINDOW I.E A USER IS CUSTOMER
-            if ("customer@gmail.com".equals(tfMail.getText()) && "abcd*1234".equals(pfPassword.getText())) {
+			user.setPassword(pfPassword.getText());
 
-                LOGGER.info("Initializing start method to open trip window.");
+			UserManager userManager = UserManagerFactory.getUserManager();
 
-                // Load the FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/trip/Trip.fxml"));
+			user = userManager.signIn(user);
 
-                // Get the root
-                Parent root = (Parent) loader.load();
+			if (user == null) {
 
-                // Get the controller
-                TripController controller = (TripController) loader.getController();
+				// Handle the case when the user is not logged in.
+				showErrorAlert("Login failed. Please check your credentials.");
 
-                // Set the stage
-                controller.setStage(stage);
+				// Handle the case when the user is an admin.
+			} else if (user.getUserType() == ADMIN) {
 
-                //create the object of the logged customer
-                Customer customer = new Customer();
+				LOGGER.info("Initializing start method to open signin window.");
 
-                customer.setMail("customer@gmail.com");
+				// Get the root
+				Parent root = (Parent) loaderAdmin.load();
 
-                // Initialize the stage
-                controller.initStage(root, customer);
+				// Get the controller
+				CustomerListController controller = (CustomerListController) loaderAdmin.getController();
 
-                return;
-            }
+				// Set the stage
+				controller.setStage(stage);
 
-            User user = new User();
+				// Initialize the stage
+				controller.initStage(root);
 
-            user.setMail(tfMail.getText());
+				// Close the login window
+				stage.close();
 
-            user.setPassword(pfPassword.getText());
+				// Handle the case when the user is a customer.
+			} else if (user.getUserType() == CUSTOMER) {
 
-            UserManager userManager = UserManagerFactory.getUserManager();
+				LOGGER.info("Initializing start method to open signin window.");
 
-            user = userManager.signIn(user);
+				// Get the root
+				Parent root = (Parent) loaderTrip.load();
 
-            if (user == null) {
+				// Get the controller
+				TripController controller = (TripController) loaderTrip.getController();
 
-                // Handle the case when the user is not logged in.
-                showErrorAlert("Login failed. Please check your credentials.");
+				// Set the stage
+				controller.setStage(stage);
 
-                // Handle the case when the user is an admin.
-            } else if (user.getUserType() == ADMIN) {
+				// create the object of the logged customer
+				Customer customer = new Customer();
 
-                LOGGER.info("Initializing start method to open signin window.");
+				customer.setMail(user.getMail());
 
-                // Load the FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/customer/CustomerList.fxml"));
+				// Initialize the stage
+				controller.initStage(root, customer);
 
-                // Get the root
-                Parent root = (Parent) loader.load();
+				// Close the login window
+				stage.close();
 
-                // Get the controller
-                CustomerListController controller = (CustomerListController) loader.getController();
+			} else {
 
-                // Set the stage
-                controller.setStage(stage);
+				// Handle the case when the user type is neither admin nor customer.
+				showErrorAlert("An unexpected error occurred. Please try again later.");
 
-                // Initialize the stage
-                controller.initStage(root);
+			}
 
-                // Handle the case when the user is a customer.
-            } else if (user.getUserType() == CUSTOMER) {
+		} catch (Exception e) {
 
-                LOGGER.info("Initializing start method to open signin window.");
+			// Logger
+			LOGGER.log(Level.SEVERE, "Exception. {0}", e.getMessage());
 
-                // Load the FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/trip/Trip.fxml"));
+			showErrorAlert("Unexpected error: " + e.getMessage());
+		}
+	}
 
-                // Get the root
-                Parent root = (Parent) loader.load();
+	/**
+	 * Method to handle the SignUp hyperlink action.
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void handleSignUpHyperlinkAction(ActionEvent event) {
 
-                // Get the controller
-                TripController controller = (TripController) loader.getController();
+		try {
 
-                // Set the stage
-                controller.setStage(stage);
+			// Logger
+			LOGGER.info("Initializing SignUp Hypwrlink Action.");
 
-                //create the object of the logged customer
-                Customer customer = new Customer();
+			// We load the SignUp view
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signup/SignUp.fxml"));
 
-                customer.setMail(user.getMail());
+			// We get the root
+			Parent root = (Parent) loader.load();
 
-                // Initialize the stage
-                controller.initStage(root, customer);
+			// We get the controller
+			SignUpController controller = (SignUpController) loader.getController();
 
-            } else {
+			// We set the stage
+			controller.setStage(stage);
 
-                // Handle the case when the user type is neither admin nor customer.
-                showErrorAlert("An unexpected error occurred. Please try again later.");
+			// We init the stage
+			controller.initStage(root);
 
-            }
+		} catch (IOException e) {
 
-        } catch (Exception e) {
+			// Logger
+			LOGGER.log(Level.SEVERE, "Exception: {0}", e.getMessage());
+			this.showErrorAlert(e.getMessage());
 
-            // Logger
-            LOGGER.log(Level.SEVERE, "Exception. {0}", e.getMessage());
-            
-            showErrorAlert("Unexpected error: "+e.getMessage());
-        }
-    }
+		}
+	}
 
-    /**
-     * Method to handle the SignUp hyperlink action.
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void handleSignUpHyperlinkAction(ActionEvent event) {
+	/**
+	 * Method to handle the Reset Password hyperlink action.
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void handleResetPasswordHyperlinkAction(ActionEvent event) {
 
-        try {
+		try {
 
-            // Logger
-            LOGGER.info("Initializing SignUp Hypwrlink Action.");
+			// Logger
+			LOGGER.info("Initializing Reset Password Hypwrlink Action.");
 
-            // We load the SignUp view
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signup/SignUp.fxml"));
+			// We load the SignUp view
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/sendmail/SendMail.fxml"));
 
-            // We get the root
-            Parent root = (Parent) loader.load();
+			// We get the root
+			Parent root = (Parent) loader.load();
 
-            // We get the controller
-            SignUpController controller = (SignUpController) loader.getController();
+			// We get the controller
+			SendMailController controller = (SendMailController) loader.getController();
 
-            // We set the stage
-            controller.setStage(stage);
+			// We set the stage
+			controller.setStage(stage);
 
-            // We init the stage
-            controller.initStage(root);
+			// We init the stage
+			controller.initStage(root);
 
-        } catch (IOException e) {
+		} catch (IOException e) {
 
-            // Logger
-            LOGGER.log(Level.SEVERE, "Exception: {0}", e.getMessage());
-            this.showErrorAlert(e.getMessage());
+			// Logger
+			LOGGER.log(Level.SEVERE, "Exception: {0}", e.getMessage());
+			this.showErrorAlert(e.getMessage());
 
-        }
-    }
+		}
+	}
 
-    /**
-     * Method to handle the Reset Password hyperlink action.
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void handleResetPasswordHyperlinkAction(ActionEvent event) {
+	/**
+	 * Method to handle the Eye button action.
+	 *
+	 * @param event An action event.
+	 */
+	@FXML
+	private void handleEyeButtonAction(ActionEvent event) {
 
-        try {
+		// Logger
+		LOGGER.info("Initializing handle on eye button action.");
 
-            // Logger
-            LOGGER.info("Initializing Reset Password Hypwrlink Action.");
-
-            // We load the SignUp view
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/sendmail/SendMail.fxml"));
-
-            // We get the root
-            Parent root = (Parent) loader.load();
-
-            // We get the controller
-            SendMailController controller = (SendMailController) loader.getController();
-
-            // We set the stage
-            controller.setStage(stage);
-
-            // We init the stage
-            controller.initStage(root);
-
-        } catch (IOException e) {
-
-            // Logger
-            LOGGER.log(Level.SEVERE, "Exception: {0}", e.getMessage());
-            this.showErrorAlert(e.getMessage());
-
-        }
-    }
-
-    /**
-     * Method to handle the Eye button action.
-     *
-     * @param event An action event.
-     */
-    @FXML
-    private void handleEyeButtonAction(ActionEvent event) {
-
-        // Logger
-        LOGGER.info("Initializing handle on eye button action.");
-
-        // We call the showPassword method
-        showPassword(btEye, pfPassword, tfPasswordReveal);
-    }
+		// We call the showPassword method
+		showPassword(btEye, pfPassword, tfPasswordReveal);
+	}
 }
