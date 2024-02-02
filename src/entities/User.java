@@ -32,6 +32,16 @@ public class User implements Serializable {
      */
     private EnumUserType userType;
 
+    public User(String mail, String password, Date creationDate, EnumUserType userType) {
+        this.mail = mail;
+        this.password = password;
+        this.creationDate = creationDate;
+        this.userType = userType;
+    }
+
+    public User() {
+    }
+
     /**
      * Gets mail value for user.
      *

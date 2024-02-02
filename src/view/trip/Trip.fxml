@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.trip.TripController">
+	<children>
+		<MenuBar fx:id="menuBar">
+			<menus>
+				<Menu fx:id="miHelp" mnemonicParsing="false" text="Help" />
+				<Menu fx:id="menuExit" mnemonicParsing="false" text="Exit" />
+			</menus>
+		</MenuBar>
+		<Pane prefHeight="768.0" prefWidth="1366.0">
+			<children>
+				<ComboBox fx:id="cbSearchOptions" layoutX="47.0" layoutY="160.0" prefHeight="49.0"
+					prefWidth="227.0" />
+				<ComboBox fx:id="cbTripType" layoutX="359.0" layoutY="160.0" prefHeight="49.0"
+					prefWidth="251.0" />
+				<RadioButton fx:id="rbActive" layoutX="349.0" layoutY="173.0"
+					mnemonicParsing="false" text="Active" textFill="#808080">
+					<font>
+						<Font size="17.0" />
+					</font>
+				</RadioButton>
+				<RadioButton fx:id="rbInactive" layoutX="454.0" layoutY="173.0"
+					mnemonicParsing="false" text="Inactive" textFill="#838383">
+					<font>
+						<Font size="17.0" />
+					</font>
+				</RadioButton>
+				<RadioButton fx:id="rbBoth" layoutX="567.0" layoutY="173.0" mnemonicParsing="false"
+					text="Both" textFill="#868484">
+					<font>
+						<Font size="17.0" />
+					</font>
+				</RadioButton>
+				<Button fx:id="btSearch" layoutX="969.0" layoutY="166.0" mnemonicParsing="false"
+					prefHeight="36.0" prefWidth="134.0" text="Search" />
+				<Button fx:id="btPurchaseCancel" layoutX="1150.0" layoutY="268.0"
+					mnemonicParsing="false" prefHeight="54.0" prefWidth="182.0" text="Purchase Trip" />
+				<TableView fx:id="tableViewTrips" layoutX="47.0" layoutY="237.0" prefHeight="407.0"
+					prefWidth="1079.0">
+					<columns>
+						<TableColumn fx:id="tableColumnDescription" prefWidth="432.5"
+							text="Description" />
+						<TableColumn fx:id="tableColumnType" prefWidth="196.5" text="Type" />
+						<TableColumn fx:id="tableColumnStart" prefWidth="214.0" text="Start" />
+						<TableColumn fx:id="tableColumnEnd" prefWidth="235.0" text="End" />
+					</columns>
+					<contextMenu>
+						<ContextMenu>
+							<items>
+								<MenuItem fx:id="menuItemBook" mnemonicParsing="false"
+									text="Book Trip" />
+								<MenuItem fx:id="menuItemCancel" mnemonicParsing="false"
+									text="Cancel Trip" />
+							</items>
+						</ContextMenu>
+					</contextMenu>
+				</TableView>
+				<Button fx:id="btPrint" layoutX="47.0" layoutY="675.0" mnemonicParsing="false"
+					prefHeight="36.0" prefWidth="134.0" text="Print Document" />
+				<Label layoutX="47.0" layoutY="116.0" text="Search Options">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</Label>
+				<Label layoutX="47.0" layoutY="42.0" text="Trips">
+					<font>
+						<Font size="42.0" />
+					</font>
+				</Label>
+				<Label fx:id="lbStatus" layoutX="443.0" layoutY="116.0" text="Status">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</Label>
+				<Label fx:id="lbTripType" layoutX="429.0" layoutY="116.0" text="Trip Type">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</Label>
+			</children>
+		</Pane>
+	</children>
+</VBox>
