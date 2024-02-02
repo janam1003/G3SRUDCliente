@@ -20,6 +20,7 @@ import factories.TripInfoManagerFactory;
 import factories.TripManagerFactory;
 import interfaces.TripInfoManager;
 import interfaces.TripManager;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +64,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import view.signin.LoginController;
 
 /**
  * FXML Controller class
@@ -445,14 +447,18 @@ public class TripController extends GenericController {
                 ButtonType.NO);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
-                // LOAD SIGN IN WINDOW HERE
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signin/Login.fxml"));
-				Parent root = (Parent) loader.load();
-				// Get the controller instance from the loader
-				LoginController loginController = loader.getController();
-				// Set the parent stage in the controller
-				loginController.setStage(this.getStage());
-				loginController.initStage(root);
+                try {
+                    // LOAD SIGN IN WINDOW HERE
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/signin/Login.fxml"));
+                    Parent root = (Parent) loader.load();
+                    // Get the controller instance from the loader
+                    LoginController loginController = loader.getController();
+                    // Set the parent stage in the controller
+                    loginController.setStage(this.getStage());
+                    loginController.initStage(root);
+                } catch (IOException ex) {
+                    Logger.getLogger(TripController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
