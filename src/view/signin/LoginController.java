@@ -111,7 +111,7 @@ public class LoginController extends GenericController {
 			stage.setTitle("Login");
 
 			// We set the window icon
-			stage.getIcons().add(new Image("/Resources/logo.png"));
+			//stage.getIcons().add(new Image("/Resources/logo.png"));
 
 			// We set the scene
 			stage.setScene(scene);
