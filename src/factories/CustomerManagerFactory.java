@@ -7,17 +7,31 @@ package factories;
 
 import implementations.CustomerManagerImplementation;
 import interfaces.CustomerManager;
+import java.util.logging.Logger;
 
 /**
+ * Factory class responsible for creating instances of the CustomerManager
+ * interface. This class provides a method to obtain an implementation of the
+ * CustomerManager.
  *
  * @author danid
  */
 public class CustomerManagerFactory {
-    
-    public static CustomerManager getCustomerManager(){
-        
+
+    /**
+     * Logger object used to log messages for the application.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CustomerManagerFactory.class.getName());
+
+    /**
+     * Retrieves an instance of the CustomerManager interface.
+     *
+     * @return An implementation of the CustomerManager.
+     */
+    public static CustomerManager getCustomerManager() {
+        LOGGER.info("Initializing Customer Manager.");
+
         return new CustomerManagerImplementation();
-    
     }
-    
+
 }

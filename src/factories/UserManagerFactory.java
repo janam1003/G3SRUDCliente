@@ -11,17 +11,23 @@ package factories;
  */
 import implementations.UserManagerImplementation;
 import interfaces.UserManager;
+import java.util.logging.Logger;
 
-/**
- *
- * @author danid
- */
 public class UserManagerFactory {
+    /**
+	 * Logger object used to log messages for the application.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(UserManagerFactory.class.getName());
     
+    /**
+     * Returns an instance of UserManager that is implemented by
+     * UserManagerImplementation.
+     * 
+     * @return an instance of UserManager
+     */
     public static UserManager getUserManager(){
-        
+        LOGGER.info("Getting Customer Manager.");
         return new UserManagerImplementation();
-    
     }
     
 }

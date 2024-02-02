@@ -26,7 +26,7 @@ import restful.UserRESTClient;
 public class UserManagerImplementation implements UserManager {
 
     // Logger for logging information and errors
-    protected static final Logger LOGGER = Logger.getLogger("G3LoginLogoutCliente.View");
+    protected static final Logger LOGGER = Logger.getLogger("UserManagerImplementation");
 
     // REST client for user-related operations
     private UserRESTClient client = new UserRESTClient();

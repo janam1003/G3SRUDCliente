@@ -17,6 +17,7 @@ import factories.TripInfoManagerFactory;
 import factories.TripManagerFactory;
 import interfaces.TripInfoManager;
 import interfaces.TripManager;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +58,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import view.signin.LoginController;
 
 /**
  * FXML Controller class
@@ -260,6 +262,7 @@ public class TripController extends GenericController {
 			lbStatus.setVisible(false);
 			// Set the radio button "Active" as selected by default
 			rbActive.setSelected(true);
+
 			// Set the menu item cancel to invisible
 			menuItemCancel.setVisible(false);
 			// Set disable both menu items
