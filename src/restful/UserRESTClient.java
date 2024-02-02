@@ -8,6 +8,7 @@ package restful;
 import entities.User;
 import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
@@ -35,23 +36,23 @@ public class UserRESTClient {
         webTarget = client.target(BASE_URI).path("users");
     }
 
-    public <T> T getUserByMail_XML(Class<T> responseType, String mail) throws ClientErrorException {
+    public <T> T getUserByMail_XML(Class<T> responseType, String mail) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("byMail/{0}", new Object[]{mail}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T getUserByMail_JSON(Class<T> responseType, String mail) throws ClientErrorException {
+    public <T> T getUserByMail_JSON(Class<T> responseType, String mail) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("byMail/{0}", new Object[]{mail}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T signIn_XML(Object requestEntity, Class<T> responseType) throws ClientErrorException {
+    public <T> T signIn_XML(Object requestEntity, Class<T> responseType) throws WebApplicationException {
         return webTarget.path("signIn").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
     }
 
-    public <T> T signIn_JSON(Object requestEntity, Class<T> responseType) throws ClientErrorException {
+    public <T> T signIn_JSON(Object requestEntity, Class<T> responseType) throws WebApplicationException {
         return webTarget.path("signIn").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), responseType);
     }
 
