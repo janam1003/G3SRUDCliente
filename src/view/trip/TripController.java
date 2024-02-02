@@ -640,6 +640,7 @@ public class TripController extends GenericController {
 					if (response == ButtonType.YES) {
 						try {
 							tripInfoManager.createTripInfo(tripInfo);
+                                                        tripInfosBooked.add(tripInfo);
 							showInfoAlert("Trip purchased successfully");
 							// Llamar al metodo de search para que se actualice la tabla
 							btSearchOnAction(event);

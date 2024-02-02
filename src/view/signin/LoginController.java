@@ -205,7 +205,7 @@ public class LoginController extends GenericController {
 				controller.initStage(root);
 
 				// Close the login window
-				stage.close();
+				//stage.close();
 
 				return;
 			}
@@ -271,7 +271,7 @@ public class LoginController extends GenericController {
 				controller.initStage(root);
 
 				// Close the login window
-				stage.close();
+				//stage.close();
 
 				// Handle the case when the user is a customer.
 			} else if (user.getUserType() == CUSTOMER) {
