@@ -187,7 +187,7 @@ public class SignUpController extends GenericController {
         //Defines the title to SignUp
         stage.setTitle("SignUp");
         //Adds the picture to the view
-        stage.getIcons().add(new Image("Resources/logo.png"));
+        stage.getIcons().add(new Image("resources/logo.png"));
         //Sets the new scene
         stage.setScene(scene);
 

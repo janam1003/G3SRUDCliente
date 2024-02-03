@@ -60,7 +60,7 @@ public class SendMailController extends GenericController {
             stage.setTitle("Remember Password");
 
             // We set the window icon
-            stage.getIcons().add(new Image("/Resources/logo.png"));
+            stage.getIcons().add(new Image("/resources/logo.png"));
 
             // We set the scene
             stage.setScene(scene);
