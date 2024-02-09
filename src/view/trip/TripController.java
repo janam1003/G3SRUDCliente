@@ -243,10 +243,11 @@ public class TripController extends GenericController {
 			cbTripType.setVisible(true);
 
 			// The comboBox will have 5 options
-			ObservableList<String> tripTypes = FXCollections.observableArrayList("", "Culture", "Nature", "Leisure",
+			ObservableList<String> tripTypes = FXCollections.observableArrayList("All types", "Culture", "Nature", "Leisure",
 					"Sports");
 			cbTripType.setItems(tripTypes);
-
+                        cbTripType.getSelectionModel().select("All types");
+                        
 			// Set the text of the purchase/cancel button to "Purchase Trip" and disable it
 			btPurchaseCancel.setText("Purchase Trip");
 			btPurchaseCancel.setDisable(true);
@@ -317,6 +318,10 @@ public class TripController extends GenericController {
 					Date initialDate = Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 					// call the method to update the tripInfo only if is my trips
 					if ("My Trips".equals(cbSearchOptions.getValue())) {
+                                                if (initialDate.equals("")) {
+                                                    System.out.println("Ha entrado ssetoneditcommit  start\n\n");
+							throw new Exception("You need to select a last date");
+						}
 						// obtein the tripInfo of the trip
 						TripInfo copy = trip.getTripInfo().get(0);
 						// Check if initial date is before last date
@@ -365,6 +370,10 @@ public class TripController extends GenericController {
 					Date lastDate = Date.from(t.getNewValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 					// call the method to update the tripInfo only if is my trips
 					if ("My Trips".equals(cbSearchOptions.getValue())) {
+                                                if (lastDate.equals("")) {
+                                                                System.out.println("Ha entrado setoneditcommit \n\n");
+							throw new Exception("You need to select a last date");
+						}
 						// obtein the tripInfo of the trip
 						TripInfo copy = trip.getTripInfo().get(0);
 						// Check if initial date is before last date
@@ -399,10 +408,15 @@ public class TripController extends GenericController {
 			});
 			tableColumnStart.setOnEditCancel((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
 				// Put the old value on the datepicker cell
+                                
+				// call search method to refresh the table
+				btSearchOnAction(null);
+						
 			});
 			tableColumnEnd.setOnEditCancel((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
-				t.getRowValue().getTripInfo().get(0)
-						.setLastDate(Date.from(oldEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				//t.getRowValue().getTripInfo().get(0)
+					//	.setLastDate(Date.from(oldEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				btSearchOnAction(null);
 			});
 			tableColumnEnd.setOnEditStart((TableColumn.CellEditEvent<Trip, LocalDate> t) -> {
 				oldEndDate = t.getOldValue();
@@ -488,7 +502,7 @@ public class TripController extends GenericController {
 			rbActive.setVisible(false);
 			rbInactive.setVisible(false);
 			rbBoth.setVisible(false);
-			cbTripType.getSelectionModel().select("");
+			cbTripType.getSelectionModel().select("All types");
 			btPurchaseCancel.setText("Purchase Trip");
 			menuItemCancel.setVisible(false);
 			menuItemBook.setVisible(true);
@@ -711,7 +725,7 @@ public class TripController extends GenericController {
 				tripInfos.add(tripInfo);
 			}
 			// Load the Jasper report from its path
-			JasperReport jasperReport = JasperCompileManager.compileReport("src/view/trip/TripReport.jrxml");
+			JasperReport jasperReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/TripReport.jrxml"));
 			// Create a map to pass any parameters to the report
 			Map<String, Object> parameters = new HashMap<>();
 			// Convert the data to JRBeanCollectionDataSource as JasperReport accepts data
